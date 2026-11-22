@@ -43,6 +43,12 @@ CREATE TABLE IF NOT EXISTS discovery_evidence(
  company_id INTEGER NOT NULL REFERENCES discovery_companies, source_url TEXT NOT NULL, mode TEXT NOT NULL,
  payload TEXT NOT NULL, PRIMARY KEY(company_id,source_url,mode)
 );
+CREATE TABLE IF NOT EXISTS discovery_runs (
+ id INTEGER PRIMARY KEY, request TEXT NOT NULL, started TEXT NOT NULL, finished TEXT NOT NULL DEFAULT '',
+ status TEXT NOT NULL, error TEXT NOT NULL DEFAULT '', web_calls INTEGER NOT NULL DEFAULT 0,
+ results TEXT NOT NULL DEFAULT '[]'
+);
+CREATE UNIQUE INDEX IF NOT EXISTS discovery_running ON discovery_runs(status) WHERE status='running';
 CREATE TABLE IF NOT EXISTS inquiries (
     id INTEGER PRIMARY KEY, account TEXT NOT NULL REFERENCES accounts,
     event_id TEXT NOT NULL, kind TEXT NOT NULL, sender TEXT NOT NULL,

@@ -22,6 +22,7 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from . import ai, buyers, connectors, inbox, knowledge
 from .quoting import CustomQuote, calc_quote
+from .prospecting import load_demo_run, router as prospecting_router
 from .discovery import initialize_discovery, router as discovery_router
 from .originals import listed_sources, router as originals_router
 from .parts_directory import router as parts_directory_router
@@ -101,6 +102,7 @@ async def sync_loop(app, seconds):
 async def lifespan(app):
     initialize()
     initialize_discovery()
+    load_demo_run()
     app.state.sync_error = ""
     app.state.last_sync = ""
     interval = int(os.getenv("DESK_SYNC_SECONDS", "0"))
@@ -120,6 +122,7 @@ app.mount("/assets", StaticFiles(directory=ASSETS), name="assets")
 app.mount("/examples", StaticFiles(directory=ROOT / "examples"), name="examples")
 app.include_router(originals_router)
 app.include_router(discovery_router)
+app.include_router(prospecting_router)
 app.include_router(parts_directory_router)
 app.include_router(social_comments_router)
 

@@ -9,3 +9,11 @@
 #cards .source-links{display:flex;gap:15px;flex-wrap:wrap}
 #cards .ai-output{white-space:pre-wrap}
 @media(max-width:750px){.search-fields{grid-template-columns:1fr 1fr}#cards .review{grid-template-columns:1fr}#cards .row-head{flex-wrap:wrap}}
+#research{margin-top:14px}
+#research .row-head{flex-wrap:wrap;gap:8px}
+#research .row-head label{font-size:.88rem}
+#research-history{width:auto;max-width:100%}
+#research .run-list details{border-top:1px solid var(--line);padding:10px 0}
+#research .run-list summary{cursor:pointer;overflow-wrap:anywhere}
+#research blockquote{margin:8px 0;padding-left:12px;border-left:3px solid #9cc3ce}
+#research .source-links{display:flex;gap:16px;flex-wrap:wrap}

@@ -1,0 +1,143 @@
+{
+  "request": {
+    "country": "印度尼西亚",
+    "product": "drum",
+    "role": "workshop",
+    "query": "重卡维修"
+  },
+  "started": "2026-11-22T02:46:19+00:00",
+  "finished": "2026-11-22T02:50:08+00:00",
+  "web_calls": 32,
+  "results": [
+    {
+      "company": "MMT PARTS",
+      "website": "https://www.mmtparts.store/",
+      "role": "哥伦打洛的独立商用卡车及挂车维修运营商",
+      "products": "企业卡车及挂车车队维修、轮辋维修、液压软管加工及零配件供应。",
+      "summary": "官网专列企业卡车和挂车车队维修服务，适合从挂车鼓式制动衬片的常用规格切入。",
+      "evidence": "LAYANAN JASA KERJASAMA SERVICE DENGAN ARMADA TRUK TRAILER PERUSAHAAN",
+      "source_url": "https://www.mmtparts.store/jasa-service/",
+      "contact_url": "https://www.mmtparts.store/contact/",
+      "next_action": "你们在哥伦打洛车间为挂车车队自行更换鼓刹衬片吗？最常用的挂车车轴型号是什么？",
+      "gap": "",
+      "category": "新增"
+    },
+    {
+      "company": "CV. Jaya Raya Utama",
+      "website": "https://kampasrem.com/",
+      "role": "泗水的独立商用车制动与离合器部件维修商",
+      "products": "卡车和巴士制动衬片、离合器摩擦片、制动管及液压软管，提供衬片翻修和重新安装。",
+      "summary": "该公司已公开提供卡车和巴士用衬片及重新安装服务，适合先了解翻修业务使用的散片和铆接规格。",
+      "evidence": "Pemasangan kembali kampas rem & kampas kopling dry & wet, automatic clutch, bronze reducer clutch, dll di Surabaya.",
+      "source_url": "https://kampasrem.com/",
+      "contact_url": "https://kampasrem.com/contact",
+      "next_action": "你们翻修卡车鼓刹蹄时，会单独采购铆接式衬片吗？用量最大的衬片尺寸或零件号是什么？",
+      "gap": "官网证实卡车用衬片和部件翻修安装，尚未核实是否接收重卡整车进厂维修。",
+      "category": "重复"
+    },
+    {
+      "company": "PT. Halo Auto Indonesia",
+      "website": "https://haloautoindo.com/",
+      "role": "巴厘巴板的独立欧系重卡维修与再制造运营商",
+      "products": "奔驰 Actros、Arocs、Axor 等欧系重卡的定期养护、维修、发动机与变速箱大修、差速器翻修及原厂和 OEM 零件供应。",
+      "summary": "该公司明确承接奔驰多款重卡维修，可按车型和车轴核对采用鼓式制动的车辆，优先确认 Axor 的适配需求。",
+      "evidence": "Pemeliharaan berkala, perbaikan, dan suku cadang lengkap untuk truk Eropa Anda.",
+      "source_url": "https://haloautoindo.com/",
+      "contact_url": "https://haloautoindo.com/contact/",
+      "next_action": "巴厘巴板车间会为采用鼓式制动的 Axor 自行更换衬片吗？如会，最常见的后轴衬片零件号是什么？",
+      "gap": "",
+      "category": "新增"
+    },
+    {
+      "company": "PT. Big Bengkel Dieseltama",
+      "website": "https://www.bigbengkel.com/",
+      "role": "三马林达的独立重卡及重型设备维修翻新厂",
+      "products": "卡车整车翻新、部件大修、车身维修、改装及原厂或 OEM 零件供应。",
+      "summary": "其业务包括卡车整车翻新，适合先确认翻新工单是否覆盖制动器，以及衬片是否按车型成套配套。",
+      "evidence": "Adalah Perusahaan yang berada pada fokus bisnis pengadaan spare parts dan rekondisi komponen Truk & Alat Berat",
+      "source_url": "https://www.bigbengkel.com/home/",
+      "contact_url": "https://www.bigbengkel.com/kontak/",
+      "next_action": "三马林达工厂接到重卡整车翻新项目时，哪些车型的鼓刹衬片会由你们在厂内更换？",
+      "gap": "",
+      "category": "新增"
+    },
+    {
+      "company": "CV Salim Berkat Sejahtera",
+      "website": "https://salimberkatsejahtera.com/",
+      "role": "巴厘巴板的独立欧系卡车维修与零配件运营商",
+      "products": "欧系卡车零配件、卡车及重型设备轮胎维修、发动机和变速箱大修。",
+      "summary": "该公司同时做欧系卡车维修和配件供应，可从现有车队客户是否有欧系重卡鼓刹衬片配套需求问起。",
+      "evidence": "Kami menangani segala jenis truck khususnya buatan Eropa",
+      "source_url": "https://salimberkatsejahtera.com/",
+      "contact_url": "https://salimberkatsejahtera.com/kontak/",
+      "next_action": "除了轮胎维修和总成大修，巴厘巴板车间是否自行更换欧系重卡鼓刹衬片？常做哪些车型？",
+      "gap": "",
+      "category": "新增"
+    },
+    {
+      "company": "PT Duta Cemerlang Motors",
+      "website": "https://www.dutahino.co.id/",
+      "role": "三宝垄的 Hino 授权商用卡车维修运营商",
+      "products": "Hino 300、Hino 500 和客车的厂内维修、原厂配件供应、移动维修及道路救援。",
+      "summary": "Kaligawe 车间明确使用 Hino 原厂配件，适合先核对 Hino 500 鼓刹零件号和该网点适用的配件标准。",
+      "evidence": "Servis dikerjakan teknisi bersertifikat Hino dengan suku cadang asli HGP dan HOP.",
+      "source_url": "https://www.dutahino.co.id/cabang/semarang",
+      "contact_url": "https://www.dutahino.co.id/hubungi-kami",
+      "next_action": "Kaligawe 车间最常更换的 Hino 500 后轴鼓刹衬片对应哪些 HGP 或 HOP 零件号？",
+      "gap": "",
+      "category": "新增"
+    },
+    {
+      "company": "PT Dipo Internasional Pahala Otomotif",
+      "website": "https://www.dipo.co.id/",
+      "role": "在棉兰运营维修车间的 Mitsubishi Fuso 授权商用卡车服务商",
+      "products": "Fuso 卡车预约保养、24 小时维修、移动维修、配件供应及车身修理。",
+      "summary": "棉兰业务覆盖车间和上门维修，适合先按 Fuso Fighter X 的车型和车轴核对保养中使用的衬片。",
+      "evidence": "fasilitas layanan Bengkel Siaga 24 jam di dealer, jaminan ketersediaan sparepart kendaraan Fuso dengan fasilitas Fuso Parts Depo",
+      "source_url": "https://www.dipo.co.id/news/333/dipo-internasional-pahala-otomotif-sukses-gelar-fuso-truck-campaign-2024-di-medan",
+      "contact_url": "https://www.dipo.co.id/contact",
+      "next_action": "棉兰 24 小时车间是否自行更换 Fuso Fighter X 的后轴鼓刹衬片？常用的原厂件号是什么？",
+      "gap": "",
+      "category": "新增"
+    },
+    {
+      "company": "PT Gowa Kencana Motor",
+      "website": "https://gowakencana.co.id/en_ID/",
+      "role": "在南苏拉威西马罗斯设点的奔驰授权商用卡车维修运营商",
+      "products": "奔驰 Axor 等商用卡车的保养维修、零配件供应及道路救援。",
+      "summary": "马罗斯网点明确面向 Axor，官网也提供独立的维修与配件联络渠道，适合按施工和矿用车型核对轴端规格。",
+      "evidence": "Manfaatkan jaringan bengkel kami yang luas, teknisi yang berkualitas tinggi dan layanan profesional.",
+      "source_url": "https://gowakencana.co.id/en_ID/",
+      "contact_url": "https://gowakencana.co.id/models/contact.html",
+      "next_action": "马罗斯车间负责更换哪些 Axor 施工或矿用车型的鼓刹衬片？能否按车轴型号提供对应件号？",
+      "gap": "",
+      "category": "新增"
+    },
+    {
+      "company": "PT Gaya Makmur Mobil",
+      "website": "https://www.gmmobil.com/",
+      "role": "在印尼多地运营售后维修网络的 FAW 商用重卡服务商",
+      "products": "FAW 卡车定期保养、驻场维修、零件更换、车队维保合同及零部件再制造。",
+      "summary": "其维保合同包含定期保养和换件，适合从 FAW 自卸车车队的常用后轴衬片规格切入。",
+      "evidence": "Layanan ini berupa jasa mekanik di lokasi untuk perawatan & perbaikan serta penggantian parts.",
+      "source_url": "https://www.gmmobil.com/layanan-purna-jual",
+      "contact_url": "https://www.gmmobil.com/kontak",
+      "next_action": "你们为 FAW 6×4 自卸车做合同维保时，最常更换的后轴鼓刹衬片是哪几个件号？",
+      "gap": "",
+      "category": "新增"
+    },
+    {
+      "company": "PT Bumen Redja Abadi",
+      "website": "https://bumenredjaabadi.co.id/",
+      "role": "在万丹省坦格朗奇库帕运营车间的 Mitsubishi Fuso 授权商用卡车维修商",
+      "products": "商用卡车驾驶室和车架维修、原厂零件更换，并提供卡车车间维修预约。",
+      "summary": "奇库帕有专门的 Fuso 车架维修工位，适合先确认同一网点是否承接较重车型的制动维修。",
+      "evidence": "Layanan cabin & chassis repair kendaraan niaga di Bumen Redja Abadi Cikupa ini terdiri dari 2 stall unit chassis repair",
+      "source_url": "https://bumenredjaabadi.co.id/konten/news/Bangga!-Bumen-Redja-Abadi-punya-Bengkel-Cabin-And-Chassis-Repair-Resmi-Pertama-di-Indonesia",
+      "contact_url": "https://bumenredjaabadi.co.id/services/booking_service_mitsubishi",
+      "next_action": "奇库帕网点是否也在厂内为 Fuso Fighter 更换鼓刹衬片？这项作业由哪个维修工位负责？",
+      "gap": "证据页缺少本轮打开记录",
+      "category": "待核实"
+    }
+  ]
+}

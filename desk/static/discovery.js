@@ -127,7 +127,7 @@ async function load() {
     if (seq !== searchSequence) return;
     results = data.items; currentLog = data.query;
     const cards = byId("cards"); cards.replaceChildren(...results.map(c=>draw(c,data.ai_enabled)));
-    if (!results.length) cards.append(node("p", "本地资料暂未匹配。可打开公开网络检索，再将有业务依据的企业录入。", "empty"));
+    if (!results.length) cards.append(node("p", "本地资料暂未匹配。可点击「查找新买家」联网搜索。", "empty"));
     byId("count").textContent = "候选企业 · " + results.length;
     const top = results.filter(c=>!c.crm).slice(0,10);
     const checked = top.filter(c=>Boolean(c.decision)).length;
@@ -174,7 +174,10 @@ byId("export").onclick = ()=>{
   const url=URL.createObjectURL(new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"}));
   const a=node("a");a.href=url;a.download="冠英买家复核表.csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 };
-search.elements.query.value = (new URLSearchParams(location.search).get("query") || "").slice(0, 200);
+const initialFilters = new URLSearchParams(location.search);
+search.elements.query.value = (initialFilters.get("query") || "").slice(0, 200);
+if (initialFilters.get("country")) search.elements.country.value = initialFilters.get("country").slice(0,100);
+if (initialFilters.get("product") === "disc") search.elements.product.value = "disc";
 load();
 
 const liveForm = byId("live");
@@ -209,3 +212,115 @@ async function searchLive(page) {
 }
 liveForm.onsubmit=e=>{e.preventDefault();searchLive(1);};
 byId("live-next").onclick=()=>searchLive(livePage+1);
+
+const findBuyers = byId("find-buyers"), historySelect = byId("research-history");
+const researchStatus = byId("research-status"), researchResults = byId("research-results");
+let cliReady = false, activeRun = false, launching = false, selectedRun = 0, poll;
+const roleNames = {workshop:"维修企业", fleet:"车队", trade:"经销商或进口商", "":"全部角色"};
+const categoryNames = ["新增", "重复", "待核实"];
+const categoryStyles = {"新增":"tag ok", "重复":"tag cool", "待核实":"tag"};
+
+function updateResearchButton() {
+  historySelect.disabled = activeRun || launching;
+  findBuyers.disabled = !cliReady || activeRun || launching;
+  findBuyers.textContent = activeRun || launching ? "正在查找…" : "查找新买家";
+}
+function renderRun(run) {
+  researchResults.replaceChildren();
+  const terms = run.request;
+  const scope = [terms.snapshot ? "随演示库载入的实测记录" : "", terms.country, terms.product === "drum" ? "鼓式刹车片" : "盘式刹车片",
+    roleNames[terms.role], terms.query].filter(Boolean).join(" · ");
+  if (run.status === "running") {
+    researchStatus.textContent = scope + "。本机 Codex CLI 正在搜索公开网页并核对联系入口，离开页面后仍会继续。";
+    return;
+  }
+  if (run.status === "failed") {
+    researchStatus.textContent = scope + "。本轮未完成。"+run.error;
+    return;
+  }
+  const counts = categoryNames.map(name => name+" "+run.results.filter(r=>r.category===name).length+" 家");
+  researchStatus.textContent = scope+" ｜ "+counts.join(" · ")+" ｜ 联网操作 "+run.web_calls+" 次";
+  if (!run.results.length) {
+    researchResults.append(node("p","本轮没有找到匹配的公开线索，可调整市场或关键词再试。"));
+    return;
+  }
+  const list = node("div","","run-list");
+  for (const row of run.results) {
+    const item = node("details"), title = node("summary");
+    title.append(node("span",row.category,categoryStyles[row.category]), document.createTextNode(" "+row.company));
+    item.append(title, node("p",row.summary || "推荐理由待补充"));
+    if (row.evidence) item.append(node("blockquote",row.evidence));
+    if (row.gap) item.append(node("p","待核实事项 · "+row.gap));
+    if (row.next_action) item.append(node("p","建议首问 · "+row.next_action,"mini"));
+    const links = node("div","","source-links");
+    if (row.source_url) links.append(link("证据原页 ↗",row.source_url));
+    if (row.contact_url) links.append(link("公开联系入口 ↗",row.contact_url));
+    else links.append(node("span","联系入口待查","mini"));
+    if (row.company_id) {
+      const params = new URLSearchParams({country:terms.country, product:terms.product, query:row.card_name || row.company});
+      const cardLink = node("a","查看企业卡");
+      cardLink.href = "/static/discovery.html?"+params+"#cards"; links.append(cardLink);
+    }
+    item.append(links); list.append(item);
+  }
+  researchResults.append(list);
+}
+async function displayRun(id, refreshCards = false) {
+  clearTimeout(poll);
+  selectedRun = id;
+  let retry = false;
+  try {
+    const run = await api("/api/discovery/runs/"+id);
+    if (selectedRun !== id) return;
+    renderRun(run);
+    if (run.status === "running") {
+      retry = true; activeRun = true;
+    } else if (refreshCards) {
+      activeRun = false;
+      if (run.status === "done") await load();
+    }
+  } catch (e) {
+    if (selectedRun !== id) return;
+    retry = true; researchStatus.textContent = "暂时无法读取搜索进度，将自动重试。"+e.message;
+  } finally {
+    if (selectedRun === id) {
+      updateResearchButton();
+      if (retry) poll = setTimeout(()=>displayRun(id,true),3000);
+    }
+  }
+}
+async function researchHistory(preferred) {
+  const data = await api("/api/discovery/runs"), runs = data.runs;
+  cliReady = data.enabled;
+  activeRun = runs.some(r=>r.status==="running");
+  historySelect.replaceChildren(...runs.map(r=>{
+    const option=node("option","#"+r.id+" · "+beijingTime(r.started)+" · "+r.request.country+" · "+roleNames[r.request.role]);
+    option.value = r.id; return option;
+  }));
+  byId("run-picker").hidden = !runs.length;
+  // Keep polling the active batch even if another tab started it.
+  const id = runs.find(r=>r.status==="running")?.id || preferred || runs[0]?.id;
+  if (id) {
+    historySelect.value = id;
+    await displayRun(id,activeRun);
+  } else {
+    researchStatus.textContent = cliReady ? "选择市场、产品和角色，点击「查找新买家」开始本机联网搜索。"
+      : "本机联网搜索需要已登录的 Codex CLI。请使用 --codex 启动工作台。";
+  }
+  if (!cliReady) findBuyers.title = "请使用 --codex 启动工作台";
+  updateResearchButton();
+}
+historySelect.onchange = ()=>displayRun(Number(historySelect.value));
+findBuyers.onclick = async ()=>{
+  if (launching || activeRun || !search.reportValidity()) return;
+  launching = true; updateResearchButton();
+  researchStatus.textContent = "正在启动本机 Codex CLI…";
+  try {
+    const {id} = await api("/api/discovery/runs","POST",formObject(search));
+    await researchHistory(id);
+  } catch (e) {
+    try { await researchHistory(); } catch { /* show original error */ }
+    if (!activeRun) researchStatus.textContent = e.message;
+  } finally { launching=false; updateResearchButton(); }
+};
+researchHistory().catch(e=>{researchStatus.textContent=e.message;});
