@@ -95,7 +95,6 @@
           </div>
           <div class="rail">
             <section class="panel rail-panel"><h2>待跟进询盘</h2><div class="rail-stats"><div><strong id="rail-pending">—</strong><span>全部待跟进</span></div><div><strong id="rail-dm">—</strong><span>待处理私信</span></div></div><p id="rail-lead">询盘同步后显示在这里。</p><button class="secondary" data-view="inbox">打开收件箱</button></section>
-            <section class="panel rail-panel show-panel"><span class="tag">12 月 2–5 日</span><h2>上海法兰克福汽配展</h2><p>国家会展中心（上海）<br>冠英展位 <strong>1.1N59</strong></p><button class="quiet" data-view="fair">查看展会邀约</button></section>
           </div>
         </div>
       </section>
@@ -135,49 +134,6 @@
           <form id="import-inbox" class="fields"><label>平台账号<select name="account" required></select></label>
             <label>UTF-8 CSV<input type="file" name="file" accept=".csv,text/csv" required></label>
             <button class="primary">导入询盘</button></form></details>
-      </section>
-      <section id="view-fair" class="view" hidden>
-        <div class="headline"><div><h1>上海汽配展邀约</h1><p>在展前确认面谈，展中采集常用联系方式，展后推进样品与工厂参观。</p></div><a class="secondary" href="https://automechanika-shanghai.hk.messefrankfurt.com/shanghai/en/planning-preparation/visitors.html" target="_blank" rel="noopener">展会官方信息</a></div>
-        <div class="fair-banner panel"><div><span>Automechanika Shanghai</span><h2>1.1N59</h2><p>2026 年 12 月 2–5 日 · 国家会展中心（上海）</p></div><div><strong>展位面谈 / 湖州工厂参观</strong><p>展期提供预约接送。参观时间、集合地点与交通方式由销售和客户确认。</p></div></div>
-        <div class="grid two">
-          <section class="panel padded">
-            <h2>买家名录</h2>
-            <p id="fair-file-note">上传买家 CSV 以在本机查看筛选与邀约。</p>
-            <a id="fair-xlsx" href="/api/buyers/workbook" class="secondary" hidden>下载买家 Excel</a>
-            <label class="file-label">导入买家 CSV<input id="buyer-file" type="file" accept=".csv,text/csv"></label>
-            <div class="filters buyer-filters"><input id="buyer-filter" placeholder="搜索公司、国家或产品"><select id="buyer-grade" aria-label="优先级"><option value="">全部优先级</option><option>A</option><option>B</option><option>C</option></select></div>
-            <div id="buyers"></div>
-          </section>
-          <section class="panel padded">
-            <h2>生成邀请邮件</h2><p>确认公司、产品与联系方式后，可在邮件客户端打开草稿。</p>
-            <form id="invitation" class="fields">
-              <label>公司 / 联系人<input name="buyer" required maxlength="120" placeholder="Your parts sourcing team"></label>
-              <label>收件邮箱<input name="email" type="email" placeholder="buyer@example.com"></label>
-              <label>产品或对方参考码<input name="product" required maxlength="180" value="heavy-duty brake linings and pads"></label>
-              <label>沟通场景<select name="stage"><option value="pre">展前邀约</option><option value="show">展中见面确认</option><option value="after">展后跟进</option></select></label>
-              <button class="primary">生成英文草稿</button>
-            </form>
-            <div id="draft" aria-live="polite"></div>
-          </section>
-        </div>
-        <section class="panel padded timeline">
-          <h2>展期跟进安排</h2><dl>
-            <div><dt>11.25–12.01</dt><dd>按匹配度邀约买家。优先从主办方 Match Up 约历史买家，请对方确认当前行程与方便时段。</dd></div>
-            <div><dt>12.02–12.05</dt><dd>展位登记品类、参考码、用量和采购周期。由买家自报常用邮箱或 WhatsApp、Telegram、Facebook，确认工厂参观兴趣及接送点。</dd></div>
-            <div><dt>12.06–12.12</dt><dd>按面谈内容发送报价所需问题、样品计划或参观确认。回访优先使用买家确认的长期联系方式。</dd></div>
-          </dl>
-          <details><summary>虹桥周边 20 km 投放简报</summary><p>拟以国家会展中心为地理范围中心，验证 Meta 后台是否支持上海定向及有效覆盖。使用英文、西语、葡语素材，引导主动预约展位或参观工厂。若后台覆盖不足，使用主办方配对、预约链接和现场二维码收集主动留资。投放指标以有效询盘、到展位和参观预约为准。</p><button class="quiet" id="copy-ad">复制英文投放文案</button></details>
-        </section>
-        <details class="panel fold"><summary>登记买家名片与长期联系方式</summary>
-          <form id="capture-buyer" class="fields">
-            <label>企业名称<input name="company" required maxlength="170"></label><label>国家 / 地区<input name="country" required maxlength="100"></label>
-            <label>联系人 / 职务<input name="business_contact" maxlength="100"></label><label>意向产品 / 旧片型号<input name="products" required maxlength="350"></label>
-            <label>工作邮箱<input name="email" type="email" maxlength="140"></label><label>常用 WhatsApp<input name="whatsapp" placeholder="含国际区号" maxlength="140"></label>
-            <label>Facebook 主页<input type="url" name="facebook" maxlength="300"></label><label>Telegram<input name="telegram" maxlength="100"></label>
-            <label>常用 WeChat<input name="wechat" maxlength="100"></label><label>下次会面 / 参观安排<input name="next_action" maxlength="200" placeholder="买家确认的日期、地点、接送要求"></label>
-            <button class="primary">登记买家</button>
-          </form>
-        </details>
       </section>
       <section id="view-knowledge" class="view" hidden>
         <div class="headline"><div><h1>企业知识库</h1><p>把目录、交叉编码、现场经验、适配验证、测试报告和价表关联到同一产品型号。</p></div></div>

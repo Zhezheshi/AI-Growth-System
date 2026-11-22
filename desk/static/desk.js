@@ -13,7 +13,6 @@ const date = value => value ? new Intl.DateTimeFormat("zh-CN", {
 const roleNames = {unknown:"待核实",end_user:"终端采购",trade:"贸易渠道"};
 const statusNames = {new:"待跟进",following:"跟进中",done:"已完成"};
 const sourceModes = {platform:"实接", social:"行业评论", relay:"上游转接", legacy:"导入", import:"导入", manual:"手工", demo:"演示"};
-const buyerStages = {new:"待接触",invited:"已邀约",meeting:"已确认面谈",visited:"已面谈 / 参观",followup:"展后跟进",closed:"完成"};
 const missingLabels = {products:"产品",fit:"适配复核",reports:"试验报告",prices:"价表",cases:"销售经验"};
 const tag = (label, style = "") => `<span class="tag ${style}">${escape(label)}</span>`;
 const options = (values, choice) => Object.entries(values).map(([key, value]) =>
@@ -34,7 +33,6 @@ let inboxVersion = 0;
 let searchVersion = 0;
 let exampleFields = {};
 const inquiryAssessments = new Map();
-let buyerVersion = 0;
 let noticeTimer;
 
 async function api(url, method = "GET", data) {
@@ -77,7 +75,6 @@ function openView(view, initial = false) {
   });
   window.scrollTo(0,0);
   if (view === "inbox" || view === "home") return run(refreshInbox);
-  if (view === "fair") return run(refreshBuyers);
 }
 
 function source(name, page) {
@@ -182,7 +179,6 @@ async function refreshInfo() {
   $("#catalog-count").textContent = `${info.products} 条目录记录`;
   $("#quote-example").hidden = !info.demo;
   $("#model-extract").hidden = !info.ai;
-  $("#fair-xlsx").hidden = !info.buyer_workbook;
   $("#sync-status").textContent = info.sync_sources.map(source => {
     const success = source.last_success ? date(source.last_success) + " 北京时间" : "暂无成功记录";
     return source.label + " · 最近成功读取 " + success +
@@ -319,44 +315,6 @@ async function refreshInbox() {
   $("#next-inbox").hidden = !result.more;
 }
 
-async function refreshBuyers() {
-  const version = ++buyerVersion;
-  const query = new URLSearchParams({query:$("#buyer-filter").value,grade:$("#buyer-grade").value});
-  const list = await api("/api/buyers?" + query);
-  if (version !== buyerVersion) return;
-  $("#fair-file-note").textContent = list.length ? `当前筛选 ${list.length} 家。展开条目查看证据和跟进。` : "当前筛选没有买家，可导入公开线索或授权的海关数据。";
-  $("#buyers").innerHTML = list.map(row => `<details class="buyer-detail"><summary>${tag(row.grade,"cool")} ${escape(row.company)} · ${escape(row.country)}</summary>
-    <p>${escape(row.products)} · ${escape(row.attendance || "到场待核实")}</p><p>${escape(row.match)}</p>
-    <p class="mini">${escape([row.business_contact,row.email,row.phone,row.whatsapp,row.telegram,row.wechat,row.next_action].filter(Boolean).join(" · "))}</p>
-    <div class="actions">${[["业务",row.product_source],["联系",row.contact_source],["到场",row.attendance_source]].filter(([,href])=>href).map(([label,href])=>
-      `<a class="quiet" href="${escape(href)}" target="_blank" rel="noopener">${label}来源</a>`).join("")}
-      <button type="button" class="quiet prepare-invite" data-buyer="${escape(row.company)}" data-email="${escape(row.email)}">生成邀约</button>
-    </div><form class="fields buyer-form" data-id="${escape(row.id)}">
-      <label>跟进阶段<select name="stage">${options(buyerStages,row.stage)}</select></label>
-      <label>联系人 / 下次行动<input name="notes" maxlength="3000" value="${escape(row.notes)}"></label><button class="quiet">保存跟进</button>
-    </form></details>`).join("");
-  $$(".buyer-form").forEach(form => respond(form,async data => {
-    await api("/api/buyers/" + encodeURIComponent(form.dataset.id),"PATCH",data);
-    notify("买家跟进已保存");
-  }));
-}
-
-function invitation(row) {
-  const subjects = {pre:"Meet Kooying at Automechanika Shanghai | Booth 1.1N59",
-    show:"Confirming our meeting at Automechanika Shanghai | Booth 1.1N59",
-    after:"Following up on heavy-duty braking parts | Kooying"};
-  const opening = {
-    pre:`Will your team be in Shanghai for Automechanika on 2–5 December 2026? We'd like to invite you to visit Kooying at booth 1.1N59 to discuss ${row.product}.`,
-    show:`If you are at Automechanika Shanghai this week, could we confirm a time at booth 1.1N59 to discuss ${row.product}?`,
-    after:`I'm following up after Automechanika Shanghai to discuss ${row.product}. If you're still in the area, we can also discuss a visit to our Huzhou factory.`
-  };
-  const body = `Hello ${row.buyer},\n\n${opening[row.stage]}\n\nIf useful, please share the reference numbers or axle applications your team buys. We'd be happy to discuss your requirements and arrange a factory tour in Huzhou, with pickup by appointment during the show. What time and business contact channel work best for you?\n\nBest regards,\nKooying Export Team\nwww.kooying.com`;
-  const subject = subjects[row.stage];
-  $("#draft").innerHTML = `<pre>${escape(subject)}\n\n${escape(body)}</pre><div class="actions">
-    <a class="secondary" href="mailto:${encodeURIComponent(row.email)}?subject=${encodeURIComponent(subject)}&amp;body=${encodeURIComponent(body)}">在邮件客户端打开</a>
-    <button class="quiet copy-quote" data-copy="${escape(subject+"\n\n"+body)}">复制邮件草稿</button></div>`;
-}
-
 const quoteForm = $("#custom-quote-form");
 const attachmentSection = $("#attachment-section");
 const attachmentLines = $("#attachment-lines");
@@ -491,12 +449,7 @@ document.addEventListener("click", event => {
     } catch (err) { display(err.message); }
 
   });
-  if (button.classList.contains("prepare-invite")) {
-    const form = $("#invitation");
-    form.elements.buyer.value = button.dataset.buyer;
-    form.elements.email.value = button.dataset.email;
-    form.elements.buyer.focus();
-  }
+
 });
 
 respond($("#search"), search);
@@ -520,15 +473,6 @@ respond(quoteForm, calculateCustomQuote);
 $("#add-attachment").addEventListener("click",addAttachment);
 quoteForm.elements.includes_attachments.addEventListener("change",toggleAttachments);
 quoteForm.addEventListener("input",clearCustomQuote);
-respond($("#invitation"), invitation);
-respond($("#capture-buyer"), async data => {
-  await api("/api/buyers","POST",data);
-  $("#capture-buyer").reset();
-  $("#buyer-filter").value = data.company;
-  $("#buyer-grade").value = "";
-  await refreshBuyers();
-  notify("已登记买家与长期联系方式");
-});
 const industryForm = $("#industry-search");
 let industryOffset = 0, industryVersion = 0, industryTimer;
 async function refreshIndustry() {
@@ -619,18 +563,6 @@ respond($("#import"),async data => {
 $("#import [name=kind]").addEventListener("change",event => {
   $("#template").href = `/examples/${event.target.value}.csv`;
 });
-$("#buyer-file").addEventListener("change",event => run(async () => {
-  if (!event.target.files.length) return;
-  const res = await api("/api/buyers/import","POST",{content:await event.target.files[0].text()});
-  notify(`已导入 ${res.imported} 家买家`);
-  await refreshBuyers();
-  event.target.value = "";
-}));
-["buyer-filter","buyer-grade"].forEach(id => $("#"+id).addEventListener("input",() => run(refreshBuyers)));
-$("#copy-ad").addEventListener("click",() => run(async () => {
-  await navigator.clipboard.writeText("Sourcing heavy-duty brake linings or pads? Meet Kooying at Automechanika Shanghai, booth 1.1N59, 2–5 December 2026. Request a short booth meeting or a Huzhou factory visit with pickup by appointment.");
-  notify("已复制英文文案");
-}));
 $$(".filters select").filter(select=> select.id.startsWith("filter-")).forEach(select => {
   select.addEventListener("change",() => run(async () => {
     inboxOffset = 0;
@@ -681,7 +613,7 @@ run(async () => {
   await refreshAccounts();
   const entry = new URLSearchParams(location.search);
   const view = entry.get("desk");
-  const destinations = ["inbox","industry","fit","fair","knowledge","accounts"];
+  const destinations = ["inbox","industry","fit","knowledge","accounts"];
   if (destinations.includes(view)) {
     const queue = entry.get("queue");
     if (["unassigned","unanswered","overdue"].includes(queue)) $("#filter-queue").value = queue;
