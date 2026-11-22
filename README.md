@@ -23,7 +23,7 @@ powershell -ExecutionPolicy Bypass -File .\dev.ps1 -Demo -DocsDir 'D:\量子'
 
 ## 企业数据
 
-仓库的 `data/catalog.json` 是经目录页面校对的首批结构化条目。它保留目录原名和页码。将三份原 PDF 放入 `DESK_DOCS_DIR`，即可从候选和资料页面打开原件。维护入口在「企业知识库」，表头位于 `examples/`。CSV 使用 UTF-8，可带 BOM。
+仓库的 `data/catalog.json` 是经目录页面校对的首批结构化条目。它保留目录原名和页码。原 PDF 默认从本机 `runtime/docs` 读取；也可将该目录链接到原件文件夹，或通过 `DESK_DOCS_DIR` 指定其他位置。候选和资料页面均可打开原件。维护入口在「企业知识库」，表头位于 `examples/`。CSV 使用 UTF-8，可带 BOM。
 
 | 数据 | 关联方式 |
 | --- | --- |

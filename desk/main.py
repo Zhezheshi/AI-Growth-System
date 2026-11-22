@@ -277,9 +277,9 @@ def info(request: Request):
 
 
 def source_path(name):
-    folder = os.getenv("DESK_DOCS_DIR")
-    path = Path(folder, name) if folder else None
-    return path if path and path.is_file() else None
+    folder = os.getenv("DESK_DOCS_DIR") or ROOT / "runtime" / "docs"
+    path = Path(folder, name)
+    return path if path.is_file() else None
 
 
 @app.get("/source/{key}")
