@@ -22,8 +22,8 @@ nav{display:grid;gap:5px}
 nav .discovery-link{text-decoration:none;font:inherit}
 nav button,nav .discovery-link{border:0;text-align:left;background:transparent;color:#d4e2ec;border-radius:7px;padding:13px 10px;display:flex;align-items:center;gap:10px;white-space:nowrap}
 nav button span,nav .discovery-link span{width:23px;text-align:center;font-size:19px;line-height:1}
-nav .discovery-link:hover,nav button:hover,nav button[aria-current]{background:#204558;color:#f7fcff}
-nav button[aria-current]{box-shadow:inset 3px 0 #91d9e6;font-weight:700}
+nav .discovery-link:hover,nav button:hover,nav [aria-current]{background:#204558;color:#f7fcff}
+nav [aria-current]{box-shadow:inset 3px 0 #91d9e6;font-weight:700}
 nav em{font:700 12px/1.5 system-ui;background:#d8ecf4;color:var(--nav);border-radius:8px;padding:1px 7px;margin-left:auto}
 nav em:empty{display:none}
 .sidebar-footer{font-size:13px;color:#e1edf4;margin-top:auto;padding:15px 0 0 12px;border-top:1px solid #3a5268}

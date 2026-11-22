@@ -7,22 +7,33 @@
   <script type="module" src="/assets/desk.js"></script>
 </head>
 <body>
-  <aside class="sidebar">
-    <div class="brand"><span class="brand-mark" aria-hidden="true">K</span><div><strong>冠英外贸</strong><small>Kooying Sales Desk</small></div></div>
-    <nav aria-label="工作台">
-      <a class="discovery-link" href="/static/discovery.html"><span aria-hidden="true">◎</span>海外买家发现</a>
-      <button data-view="fit" aria-current="page"><span aria-hidden="true">⌕</span>型号与报价</button>
-      <button data-view="inbox"><span aria-hidden="true">▤</span>询盘收件箱 <em id="nav-count"></em></button>
-      <button data-view="fair"><span aria-hidden="true">◫</span>上海汽配展</button>
-      <button data-view="knowledge"><span aria-hidden="true">▥</span>企业知识库</button>
-      <button data-view="accounts"><span aria-hidden="true">◎</span>渠道与账号</button>
-    </nav>
-    <div class="sidebar-footer"><span class="dot"></span> 销售工作台 <small id="model-status">本地检索</small></div>
-  </aside>
+  <aside class="sidebar"></aside>
   <main>
-    <header class="topbar"><span>浙江冠英汽车零部件有限公司</span><button class="quiet top-inbox" data-view="inbox"><span class="dot"></span> <span id="top-alert">询盘提醒</span></button></header>
+    <header class="topbar"></header>
     <div class="content">
-      <section id="view-fit" class="view">
+      <section id="view-home" class="view">
+        <div class="headline"><div><h1>工作台首页</h1><p>查看待处理的询盘，或输入客户提供的编码查型号。</p></div></div>
+        <div class="inbox-stats panel" id="home-stats" aria-label="询盘概况">
+          <div><strong>—</strong><span>全部询盘</span></div><div><strong>—</strong><span>待认领</span></div>
+          <div><strong>—</strong><span>待回复</span></div><div><strong>—</strong><span>终端采购线索</span></div>
+        </div>
+        <div class="grid two">
+          <section class="panel"><div class="panel-heading"><h2>待回复询盘</h2><a class="quiet" href="/?desk=inbox&amp;queue=unanswered">查看全部</a></div>
+            <div id="home-inquiries"><p class="inquiry">正在读取询盘…</p></div>
+          </section>
+          <div class="rail">
+            <form class="panel search-panel" action="/">
+              <input type="hidden" name="desk" value="fit">
+              <label class="query-heading" for="home-query">现场查型号</label>
+              <div class="searchbox"><input id="home-query" name="query" required maxlength="1600" placeholder="输入旧片编码、车桥或客户原话"><button class="primary">查询型号</button></div>
+            </form>
+            <section class="panel padded"><h2>主动获客</h2><p>按市场查找海外买家，或从行业作品的评论中寻找采购需求。</p>
+              <div class="actions"><a class="secondary" href="/static/discovery.html">海外买家发现</a><a class="quiet" href="/?desk=industry">搜索行业评论</a></div>
+            </section>
+          </div>
+        </div>
+      </section>
+      <section id="view-fit" class="view" hidden>
         <div class="headline"><div><h1>查型号，准备报价</h1><p>输入客户原话、车型、当前车桥或旧片编码，现场核对目录与适配依据。</p></div><span class="tag cool" id="catalog-count">目录索引</span></div>
         <div class="grid fit-layout">
           <div>

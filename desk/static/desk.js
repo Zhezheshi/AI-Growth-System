@@ -1,3 +1,6 @@
+import {mountDeskShell} from "./shell.js";
+
+mountDeskShell("home");
 const $ = (selector, parent = document) => parent.querySelector(selector);
 const $$ = (selector, parent = document) => [...parent.querySelectorAll(selector)];
 const escape = value => String(value ?? "").replace(/[&<>"']/g, c => (
@@ -65,15 +68,16 @@ function respond(form, work) {
   });
 }
 
-function openView(view) {
+function openView(view, initial = false) {
+  if (!initial) history.replaceState(null,"",view === "home" ? "/" : "/?desk=" + encodeURIComponent(view));
   $$(".view").forEach(section => { section.hidden = section.id !== "view-" + view; });
   $$("nav button").forEach(button => {
     if (button.dataset.view === view) button.setAttribute("aria-current", "page");
     else button.removeAttribute("aria-current");
   });
-  if (view === "inbox") run(refreshInbox);
-  if (view === "fair") run(refreshBuyers);
   window.scrollTo(0,0);
+  if (view === "inbox" || view === "home") return run(refreshInbox);
+  if (view === "fair") return run(refreshBuyers);
 }
 
 function source(name, page) {
@@ -260,7 +264,8 @@ async function refreshInbox() {
   const version = ++inboxVersion;
   const params = new URLSearchParams({offset:inboxOffset});
   for (const key of ["platform","status","role","account","queue"]) params.set(key,$("#filter-" + key).value);
-  const result = await api("/api/inbox?" + params);
+  const onHome = !$("#view-home").hidden;
+  const result = await api(onHome ? "/api/inbox?queue=unanswered" : "/api/inbox?" + params);
   if (version !== inboxVersion) return;
   const counts = result.counts;
   $("#nav-count").textContent = counts.dm || "";
@@ -270,8 +275,17 @@ async function refreshInbox() {
   $("#rail-lead").textContent = counts.direct ? `有 ${counts.direct} 条疑似或已确认终端采购线索待跟进。` : "已记录的私信和评论按账号归档。";
   if (lastDmCount !== null && counts.dm > lastDmCount) notify(`收到 ${counts.dm-lastDmCount} 条待处理私信`);
   lastDmCount = counts.dm;
-  $("#inbox-stats").innerHTML = [["全部询盘",counts.total],["待认领",counts.unassigned],["待回复",counts.unanswered],
+  const stats = [["全部询盘",counts.total],["待认领",counts.unassigned],["待回复",counts.unanswered],
     ["终端采购线索",counts.direct]].map(([label,value])=>`<div><strong>${value}</strong><span>${label}</span></div>`).join("");
+  $("#inbox-stats").innerHTML = stats;
+  if (onHome) {
+    $("#home-stats").innerHTML = stats;
+    $("#home-inquiries").innerHTML = result.items.slice(0,3).map(item =>
+      `<article class="inquiry"><h3><a href="/?desk=inbox&amp;queue=unanswered&amp;inquiry=${item.id}">${escape(item.sender)}</a></h3>
+        <p class="body">${escape(item.body)}</p><p class="mini">${escape(info.platforms[item.platform])} · ${escape(item.owner || "待认领")}</p></article>`
+    ).join("") || '<p class="inquiry">当前没有待回复的询盘。</p>';
+    return;
+  }
   // Leave the operator's input intact when a background refresh occurs.
   if ($("#inquiries").contains(document.activeElement) && /INPUT|SELECT|BUTTON/.test(document.activeElement.tagName)) return;
   const list = $("#inquiries");
@@ -665,6 +679,32 @@ $("#model-extract").addEventListener("click",() => run(async () => {
 run(async () => {
   await refreshInfo();
   await refreshAccounts();
-  await Promise.all([useExample("wva"),refreshInbox()]);
+  const entry = new URLSearchParams(location.search);
+  const view = entry.get("desk");
+  const destinations = ["inbox","industry","fit","fair","knowledge","accounts"];
+  if (destinations.includes(view)) {
+    const queue = entry.get("queue");
+    if (["unassigned","unanswered","overdue"].includes(queue)) $("#filter-queue").value = queue;
+    await openView(view === "industry" ? "inbox" : view, true);
+    if (view === "industry") {
+      $("#industry-comments").open = true;
+      industryForm.elements.keyword.focus();
+      $("#industry-comments").scrollIntoView();
+    } else if (view === "inbox" && /^\d+$/.test(entry.get("inquiry") || "")) {
+      const card = document.querySelector('#inquiries article[data-id="' + entry.get("inquiry") + '"]');
+      if (card) {
+        card.tabIndex = -1;
+        card.focus();
+        card.scrollIntoView({block:"start"});
+      } else notify("这条询盘的状态已变化，请在收件箱切换筛选查看。");
+    } else if (view === "fit") {
+      $("#query").value = (entry.get("query") || "").slice(0,1600);
+      if ($("#query").value.trim()) await search();
+      else $("#query").focus();
+    }
+    if (!["industry","inbox"].includes(view)) await refreshInbox();
+  } else {
+    await Promise.all([useExample("wva"),refreshInbox()]);
+  }
   setInterval(() => run(refreshInbox), 15000);
 });

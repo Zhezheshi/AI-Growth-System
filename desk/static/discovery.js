@@ -1,4 +1,6 @@
-"use strict";
+import {mountDeskShell} from "./shell.js";
+
+mountDeskShell("discovery");
 const byId = id => document.getElementById(id);
 const search = byId("search"), capture = byId("capture"), upload = byId("import");
 const statusNote = text => { byId("status").textContent = text; };
