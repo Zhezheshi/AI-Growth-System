@@ -54,6 +54,11 @@ CREATE TABLE IF NOT EXISTS inquiries (
     UNIQUE(account,event_id)
 );
 CREATE INDEX IF NOT EXISTS inquiries_queue ON inquiries(status,received_at);
+CREATE TABLE IF NOT EXISTS social_comments (
+    id INTEGER PRIMARY KEY, account TEXT NOT NULL REFERENCES accounts,
+    event_id TEXT NOT NULL, keyword TEXT NOT NULL, title TEXT NOT NULL, url TEXT NOT NULL,
+    sender TEXT NOT NULL, body TEXT NOT NULL, captured_at TEXT NOT NULL, UNIQUE(account,event_id)
+);
 CREATE TABLE IF NOT EXISTS inbox_sync (
     source TEXT PRIMARY KEY, label TEXT NOT NULL, last_attempt TEXT NOT NULL,
     last_success TEXT NOT NULL DEFAULT '', error TEXT NOT NULL DEFAULT '',

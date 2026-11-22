@@ -25,6 +25,7 @@ from . import ai, buyers, connectors, inbox, knowledge
 from .quoting import CustomQuote, calc_quote
 from .discovery import initialize_discovery, router as discovery_router
 from .parts_directory import router as parts_directory_router
+from .social_comments import router as social_comments_router
 from .storage import ROOT, database, initialize, now
 
 ASSETS = ROOT / "desk" / "static"
@@ -124,6 +125,7 @@ app.mount("/assets", StaticFiles(directory=ASSETS), name="assets")
 app.mount("/examples", StaticFiles(directory=ROOT / "examples"), name="examples")
 app.include_router(discovery_router)
 app.include_router(parts_directory_router)
+app.include_router(social_comments_router)
 
 
 @app.middleware("http")

@@ -9,7 +9,7 @@ const date = value => value ? new Intl.DateTimeFormat("zh-CN", {
 }).format(new Date(value)) : "";
 const roleNames = {unknown:"待核实",end_user:"终端采购",trade:"贸易渠道"};
 const statusNames = {new:"待跟进",following:"跟进中",done:"已完成"};
-const sourceModes = {platform:"实接", relay:"上游转接", legacy:"导入", import:"导入", manual:"手工", demo:"演示"};
+const sourceModes = {platform:"实接", social:"行业评论", relay:"上游转接", legacy:"导入", import:"导入", manual:"手工", demo:"演示"};
 const buyerStages = {new:"待接触",invited:"已邀约",meeting:"已确认面谈",visited:"已面谈 / 参观",followup:"展后跟进",closed:"完成"};
 const missingLabels = {products:"产品",fit:"适配复核",reports:"试验报告",prices:"价表",cases:"销售经验"};
 const tag = (label, style = "") => `<span class="tag ${style}">${escape(label)}</span>`;
@@ -205,11 +205,14 @@ async function refreshAccounts() {
     .map(a=>[a.id,a.label]))},accountFilter.value);
   $("#manual [name=account]").innerHTML = options(Object.fromEntries(accounts.map(a=>[a.id,a.label])));
   $("#import-inbox [name=account]").innerHTML = $("#manual [name=account]").innerHTML;
+  const socialAccount = $("#industry-search [name=account]");
+  socialAccount.innerHTML = options(Object.fromEntries(accounts.filter(a=>["xhs","douyin"].includes(a.platform))
+    .map(a=>[a.id,info.platforms[a.platform]+" · "+a.label])),socialAccount.value);
   accountPlatform.innerHTML = options(info.platforms, accountPlatform.value);
   updateAccountHelp();
   $("#channels").innerHTML = Object.entries(info.platforms).map(([id, name]) => {
     const matching = accounts.filter(a => a.platform === id);
-    const state = {xhs:"原工具评论 / 私信导入",douyin:"原工具评论导入",x:"授权私信读取",tiktok:"事件转接 / 手工",
+    const state = {xhs:"行业评论 / 私信导入",douyin:"行业评论",x:"授权私信读取",tiktok:"事件转接 / 手工",
       youtube:"授权视频评论读取",instagram:"签名 Webhook",made_in_china:"人工登记 / 授权 CSV 导入"}[id];
     return `<div class="channel-row"><div><strong>${escape(name)}</strong><p>
       ${matching.map(a=>escape(a.label)).join("、") || "待添加账号"}</p></div>${tag(state,"cool")}</div>`;
@@ -221,7 +224,7 @@ function inquiryCard(item, companies) {
   const minutes = Math.max(0, Math.floor((Date.now() - Date.parse(item.occurred_at)) / 60000));
   const overdue = waiting && minutes >= 8*60;
   return `<article class="inquiry" data-id="${item.id}"><div class="row-head"><div><h3>${escape(item.sender)}</h3>
-    <p class="mini">${escape(info.platforms[item.platform])} · ${escape(item.label)} · ${date(item.occurred_at)} 北京时间</p></div>
+    <p class="mini">${escape(info.platforms[item.platform])} · ${escape(item.label)} · ${item.mode === "social" ? "采集于 " : ""}${date(item.occurred_at)} 北京时间</p></div>
     <div class="tags">${tag(item.kind === "dm" ? "私信":"评论","cool")}${overdue ? tag("超过 8 小时","bad") : ""}
     ${tag(sourceModes[item.mode] || item.mode)}</div></div>
     <p class="body">${escape(item.body)}</p>
@@ -496,6 +499,49 @@ respond($("#capture-buyer"), async data => {
   await refreshBuyers();
   notify("已登记买家与长期联系方式");
 });
+const industryForm = $("#industry-search");
+let industryOffset = 0, industryVersion = 0, industryTimer;
+async function refreshIndustry() {
+  const version = ++industryVersion;
+  clearTimeout(industryTimer);
+  if (!$("#industry-comments").open) return;
+  const account = industryForm.elements.account.value;
+  const page = await api("/api/social-comments?" + new URLSearchParams({account,offset:industryOffset}));
+  if (version !== industryVersion) return;
+  $("#industry-status").textContent = page.task.message || (account
+    ? "选择关键词开始搜索，登录时请在本机浏览器内完成。" : "请先在「渠道与账号」添加小红书或抖音账号。");
+  industryForm.querySelector(".primary").disabled = page.task.running || !account;
+  $("#industry-stop").hidden = !page.task.running;
+  $("#industry-items").innerHTML = page.items.map(row=>`<article class="inquiry">
+    <p class="mini">${escape(info.platforms[row.platform])} · ${escape(row.label)} · ${escape(row.keyword)} · 采集于 ${date(row.captured_at)} 北京时间</p>
+    <strong>${escape(row.sender)}</strong><p class="body">${escape(row.body)}</p>
+    <a href="${escape(row.url)}" target="_blank" rel="noopener">${escape(row.title || "查看作品原页")}</a>
+    <button class="quiet" data-social-comment="${row.id}" ${row.inquiry_id ? "disabled" : ""}>${row.inquiry_id ? "已加入收件箱" : "加入收件箱"}</button>
+  </article>`).join("") || '<p class="empty">当前账号暂无候选评论。</p>';
+  $("#industry-prev").hidden = industryOffset === 0;
+  $("#industry-next").hidden = !page.more;
+  if (page.task.running) industryTimer = setTimeout(()=>run(refreshIndustry),2000);
+}
+$("#industry-comments").ontoggle = ()=>run(refreshIndustry);
+industryForm.elements.account.onchange = ()=>{industryOffset=0;run(refreshIndustry);};
+industryForm.onsubmit = event => {
+  event.preventDefault();
+  const data = formData(industryForm);
+  run(async()=>{
+    await api("/api/social-comments/search","POST",{...data,limit:Number(data.limit)});
+    industryOffset=0;
+    await refreshIndustry();
+  });
+};
+$("#industry-stop").onclick = ()=>run(async()=>{await api("/api/social-comments/stop","POST");await refreshIndustry();});
+$("#industry-items").onclick = e=>{const button=e.target.closest("button[data-social-comment]");if(button) run(async()=>{
+  const result=await api("/api/social-comments/"+button.dataset.socialComment+"/accept","POST");
+  notify(result.added ? "已加入询盘收件箱" : "此评论已登记");
+  await refreshIndustry();await refreshInbox();
+});};
+$("#industry-prev").onclick=()=>{industryOffset=Math.max(0,industryOffset-30);run(refreshIndustry);};
+$("#industry-next").onclick=()=>{industryOffset+=30;run(refreshIndustry);};
+
 respond($("#manual"), async data => {
   const field = $("#manual [name=event_id]");
   if (!field.value.trim()) field.value = crypto.randomUUID();

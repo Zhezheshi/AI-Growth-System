@@ -101,6 +101,17 @@
           <div id="inquiries"></div>
           <div class="pagination"><button class="quiet" id="prev-inbox" hidden>上一页</button><button class="quiet" id="next-inbox" hidden>下一页</button></div>
         </div>
+        <details class="panel fold" id="industry-comments"><summary>小红书与抖音行业评论</summary>
+          <p>用本机浏览器搜索作品并读取可见文字评论。核对来源后，可将值得跟进的评论加入收件箱。</p>
+          <form id="industry-search" class="fields">
+            <label>浏览账号<select name="account" required></select></label>
+            <label>行业关键词<input name="keyword" required maxlength="100" placeholder="例如 商用车刹车片"></label>
+            <label>本轮最多查看作品数<input name="limit" type="number" min="1" max="50" value="3" required></label>
+            <div class="actions"><button class="primary">开始搜索</button><button type="button" id="industry-stop" class="quiet" hidden>停止搜索</button></div>
+          </form>
+          <p id="industry-status" role="status"></p><div id="industry-items"></div>
+          <div class="actions"><button id="industry-prev" class="quiet" hidden>上一页评论</button><button id="industry-next" class="quiet" hidden>下一页评论</button></div>
+        </details>
         <details class="panel fold"><summary>手动登记一条评论或私信</summary><form id="manual" class="fields">
           <label>平台账号<select name="account" required></select></label><label>消息类型<select name="kind"><option value="dm">私信</option><option value="comment">评论</option></select></label>
           <label>对方显示名称<input name="sender" maxlength="160"></label><label>原文链接<input name="url" type="url" placeholder="https://"></label>
