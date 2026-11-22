@@ -77,10 +77,10 @@ function openView(view, initial = false) {
   if (view === "inbox" || view === "home") return run(refreshInbox);
 }
 
-function source(name, page) {
+function source(name, page, document = info.sources.find(item => item.name === name)) {
+  const pdfPage = page && /\.pdf$/i.test(name);
   const label = escape(name) + (page ? ` · PDF 第 ${page} 页` : "");
-  const document = info.sources.find(item => item.name === name);
-  return document?.available ? `<a target="_blank" rel="noopener" href="/source/${document.id}${page ? "#page=" + page : ""}">${label}</a>` : label;
+  return document?.available ? `<a target="_blank" rel="noopener" href="/source/${document.id}${pdfPage ? "#page=" + page : ""}">${label}</a>` : label;
 }
 
 function resultCard(row) {
@@ -184,8 +184,8 @@ async function refreshInfo() {
     return source.label + " · 最近成功读取 " + success +
       (source.error ? " · " + date(source.last_attempt) + " " + source.error : source.more ? " · 历史分页待续读" : "");
   }).join(" / ") || (info.legacy ? "已配置原获客来源，等待同步。" : "尚未记录主动同步。");
-  $("#source-list").innerHTML = info.sources.map(doc => `<div class="source-row"><strong>${source(doc.name)}</strong>
-    ${tag(doc.available ? "可查看原件" : "本机原件待绑定",doc.available ? "ok" : "")}</div>`).join("");
+  $("#source-list").innerHTML = info.sources.map(doc => `<div class="source-row"><strong>${source(doc.name, null, doc)}</strong>
+    ${tag(doc.available ? (/\.(docx|xlsx)$/i.test(doc.name) ? "可下载原件" : "可查看原件") : "本机原件待绑定",doc.available ? "ok" : "")}</div>`).join("");
   $("#knowledge-stats").textContent = [`目录 ${info.products}`,...Object.entries(missingLabels).filter(([key])=>key!=="products")
     .map(([key,title])=>`${title} ${info.records[key] || 0}`)].join("  /  ");
 }
@@ -555,6 +555,36 @@ respond($("#case"), async data => {
   await refreshInfo();
   notify("经验已保存，待技术复核");
 });
+const originalInput = $("#original-file");
+const uploadButton = $("#upload-original");
+uploadButton.onclick = () => originalInput.click();
+originalInput.onchange = async () => {
+  const file = originalInput.files[0];
+  if (!file) return;
+  const status = $("#upload-status");
+  status.hidden = false;
+  uploadButton.disabled = true;
+  try {
+    if (file.size > 100 * 1024 * 1024) throw new Error("单个文件不能超过 100 MB");
+    if (!file.size) throw new Error("请选择有内容的文件");
+    status.textContent = "正在上传「" + file.name + "」…";
+    const response = await fetch("/api/knowledge/files?" + new URLSearchParams({name:file.name}),
+      {method:"POST", headers:{"Content-Type":"application/octet-stream"}, body:file});
+    const result = await response.json();
+    if (!response.ok) throw new Error(typeof result.detail === "string" ? result.detail : "上传未完成");
+    status.textContent = "已导入「" + result.name + "」。";
+    try {
+      await refreshInfo();
+    } catch {
+      status.textContent += "请刷新页面查看资料列表。";
+    }
+  } catch (error) {
+    status.textContent = "导入失败：" + error.message;
+  } finally {
+    originalInput.value = "";
+    uploadButton.disabled = false;
+  }
+};
 respond($("#import"),async data => {
   const result = await api("/api/import/" + data.kind,"POST",{content:await data.file.text()});
   notify(`已导入 ${result.imported} 条`);

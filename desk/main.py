@@ -9,7 +9,6 @@ import secrets
 import sqlite3
 from contextlib import asynccontextmanager, suppress
 from datetime import UTC, datetime
-from pathlib import Path
 from threading import Lock
 from typing import Literal
 from urllib.error import HTTPError
@@ -24,17 +23,13 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from . import ai, buyers, connectors, inbox, knowledge
 from .quoting import CustomQuote, calc_quote
 from .discovery import initialize_discovery, router as discovery_router
+from .originals import listed_sources, router as originals_router
 from .parts_directory import router as parts_directory_router
 from .social_comments import router as social_comments_router
 from .storage import ROOT, database, initialize, now
 
 ASSETS = ROOT / "desk" / "static"
 LOCAL_HOSTS = ["localhost", "127.0.0.1"]
-SOURCES = {
-    "kooying catalog.pdf": "catalog-en",
-    "冠隆产品册.pdf": "catalog-cn",
-    "2026年浙江冠英企业介绍.pdf": "company",
-}
 
 
 sync_lock = Lock()
@@ -123,6 +118,7 @@ app = FastAPI(title="冠英外贸工作台", lifespan=lifespan, docs_url=None, r
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=[*LOCAL_HOSTS, *filter(None, os.getenv("DESK_PUBLIC_HOST", "").split(","))])
 app.mount("/assets", StaticFiles(directory=ASSETS), name="assets")
 app.mount("/examples", StaticFiles(directory=ROOT / "examples"), name="examples")
+app.include_router(originals_router)
 app.include_router(discovery_router)
 app.include_router(parts_directory_router)
 app.include_router(social_comments_router)
@@ -272,22 +268,7 @@ def info(request: Request):
             "demo": demo, "buyer_workbook": buyers.workbook_path().is_file(),
             "legacy": bool(os.getenv("DESK_LEGACY_DB")), "last_sync": request.app.state.last_sync,
             "sync_error": request.app.state.sync_error, "sync_sources": sync_log,
-            "sources": [{"name": name, "id": key, "available": source_path(name) is not None}
-                        for name, key in SOURCES.items()]}
-
-
-def source_path(name):
-    folder = os.getenv("DESK_DOCS_DIR") or ROOT / "runtime" / "docs"
-    path = Path(folder, name)
-    return path if path.is_file() else None
-
-
-@app.get("/source/{key}")
-def source(key: str):
-    name = next((n for n, ident in SOURCES.items() if ident == key), "")
-    if not name or not (path := source_path(name)):
-        raise HTTPException(404, "本机尚未配置此 PDF")
-    return FileResponse(path, media_type="application/pdf", filename=name, content_disposition_type="inline")
+            "sources": listed_sources()}
 
 
 @app.post("/api/search")

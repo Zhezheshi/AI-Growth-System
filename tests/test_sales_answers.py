@@ -46,6 +46,25 @@ class SalesAnswerTests(unittest.TestCase):
         self.assertIn("币种", customer["detail"])
         self.assertNotIn("套数", customer["detail"])
 
+    def test_oe_lookup_preserves_catalog_evidence_and_code_boundaries(self):
+        for request in [
+            {"namespace": "OE", "code": "A91 3222 S 1293"},
+            {"namespace": "目录 OE 参考码", "code": "A913222S1293"},
+            {"query": "Can you quote OEM part number A91 3222 S 1293?"},
+            {"query": "OE A91 3222 S 1293", "namespace": "OE"},
+        ]:
+            with self.subTest(request=request):
+                result = self.search(**request)
+                self.assertEqual((result["count"], result["state"]), (1, "candidate"))
+                item = result["items"][0]
+                self.assertEqual(item["code"], "4515Q")
+                hit, = item["hits"]
+                self.assertEqual((hit["namespace"], hit["label"], hit["page"]),
+                                 ("目录 OE 参考码", "A91 3222 S 1293", 32))
+        self.assertEqual(self.search(query="OE A 3222 T 1346")["items"][0]["code"], "4551Q")
+        self.assertEqual(self.search(query="OE A91 3222 S 12930")["count"], 0)
+        self.assertEqual(self.search(code="A91 3222 S 1293", namespace="WVA")["count"], 0)
+
     def test_demo_label_survives_copy_and_private_costs_stay_internal(self):
         params = dict(code="DEMO-D01", axle="DEMO-AXLE", material="DEMO-M1", position="rear",
                       market="Indonesia", currency="USD", incoterm="FOB", qty=200)

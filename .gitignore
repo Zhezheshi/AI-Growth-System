@@ -3,6 +3,7 @@ __pycache__/
 .venv/
 .env
 runtime/
+*.uploads/
 *.db
 *.db-*
 *.sqlite*

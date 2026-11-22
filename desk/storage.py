@@ -75,9 +75,13 @@ def now():
     return datetime.now(UTC).isoformat(timespec="seconds")
 
 
+def database_path():
+    return Path(os.environ.get("DESK_DATABASE", ROOT / "runtime" / "desk.db")).resolve()
+
+
 @contextmanager
 def database():
-    path = Path(os.environ.get("DESK_DATABASE", ROOT / "runtime" / "desk.db")).resolve()
+    path = database_path()
     path.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(path, timeout=10)
     conn.row_factory = sqlite3.Row

@@ -13,6 +13,11 @@ def normalize(value):
     return re.sub(r"[^a-z0-9\u3400-\u9fff]", "", unicodedata.normalize("NFKC", str(value)).casefold())
 
 
+def reference_system(value):
+    key = normalize(value)
+    return "oe" if key in {"oe", "oem", "oe号", "目录oe参考码"} else key
+
+
 def dimension_key(value):
     return re.sub(r"\s", "", unicodedata.normalize("NFKC", value).casefold()).replace("x", "×").replace("*", "×")
 
@@ -136,10 +141,12 @@ def import_csv(conn, kind, content):
     return count
 
 
+def reference_pattern(value):
+    return r"[\s./_-]*".join(re.escape(char) for char in normalize(value or ""))
+
+
 def matching(text, value, namespace=""):
-    if not value:
-        return False
-    pattern = r"[\s./_-]*".join(re.escape(char) for char in normalize(value))
+    pattern = reference_pattern(value)
     if not pattern:
         return False
     prefix = rf"(?:{re.escape(namespace.casefold())}[\s:#-]*)?" if namespace in {"WVA", "FMSI", "BFMC"} else ""
@@ -261,17 +268,31 @@ def search(conn, form):
     query, code, namespace, axle, vehicle, position, dimensions, holes = (
         form[k] for k in ("query", "code", "namespace", "axle", "vehicle", "position", "dimensions", "holes")
     )
-    named_codes = re.findall(
+    refs_in_catalog = [dict(r) for r in conn.execute("SELECT * FROM references_map ORDER BY type,label,source")]
+    query = unicodedata.normalize("NFKC", query)
+    named_codes = list(re.finditer(
         r"(?<![a-z0-9])(WVA|FMSI|BFMC|OEM?)"
         r"(?:\s+(?:part\s+)?(?:no\.?|number|code)\b\.?)?[\s:#-]*"
-        r"([0-9a-z][0-9a-z./-]*[0-9a-z])(?=$|[^a-z0-9])", query, re.I)
-    named_codes = [pair for pair in named_codes if any(char.isdigit() for char in pair[1])]
-    if not code and not namespace and len(named_codes) == 1:
-        namespace, code = named_codes[0]
+        r"([0-9a-z](?:[0-9a-z./-]*[0-9a-z])?)(?=$|[^a-z0-9])", query, re.I))
+    named_codes = [m for m in named_codes if any(c.isdigit() for c in m[2])
+                   or (reference_system(m[1]) == "oe" and re.match(r"\s+\d", query[m.end(2):]))]
+    if not code and len(named_codes) == 1:
+        match = named_codes[0]
+        if not namespace or reference_system(namespace) == reference_system(match[1]):
+            namespace, code = match.groups()
+            if reference_system(namespace) == "oe":
+                # OE numbers can contain several space-separated groups. Match the
+                # complete catalog label at the prefix, leaving trailing prose alone.
+                tail = query[match.start(2):]
+                labels = (r["label"] for r in refs_in_catalog if r["type"] in {"code", "family"}
+                          and reference_system(r["namespace"]) == "oe"
+                          and re.match(reference_pattern(r["label"]) + r"(?![a-z0-9]|[-./]\d)", tail, re.I))
+                code = max(labels, key=lambda label: len(normalize(label)), default=code)
+    namespace = reference_system(namespace)
     products = {r["key"]: dict(r) for r in conn.execute("SELECT * FROM catalog")}
     signals = {}
-    for r in conn.execute("SELECT * FROM references_map ORDER BY type,label,source"):
-        signals.setdefault(r["product"], []).append(dict(r))
+    for r in refs_in_catalog:
+        signals.setdefault(r["product"], []).append(r)
     verified_axles = set()
     if axle:
         for r in conn.execute("SELECT product,payload FROM records WHERE kind='fit'"):
@@ -289,7 +310,7 @@ def search(conn, form):
         hits = [r for r in refs if (
             (normalize(lookup_values[r["type"]]) == r["key"] if lookup_values[r["type"]]
              else matching(query, r["label"], r["namespace"]))
-            and (r["type"] not in {"code", "family"} or not namespace or normalize(namespace) == normalize(r["namespace"]))
+            and (r["type"] not in {"code", "family"} or not namespace or namespace == reference_system(r["namespace"]))
         )]
         explicit_code = sku_match or any(r["type"] == "code" for r in hits)
         family = any(r["type"] == "family" for r in hits)

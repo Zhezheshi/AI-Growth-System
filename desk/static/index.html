@@ -49,7 +49,8 @@
                   <label>车型<input name="vehicle" placeholder="例：JH6"></label>
                   <label>当前车桥<input name="axle" placeholder="例：联合440桥"></label>
                   <label>现有编码<input name="code" placeholder="例：19032"></label>
-                  <label>编码体系<input name="namespace" placeholder="例：WVA / BFMC"></label>
+                  <label>编码体系<input name="namespace" list="code-systems" placeholder="选择或输入编码体系"></label>
+                  <datalist id="code-systems"><option value="OE"></option><option value="WVA"></option><option value="BFMC"></option><option value="FMSI"></option></datalist>
                   <label>安装位置<select name="position"><option value="">请选择</option><option value="front">前</option><option value="rear">后</option><option value="trailer">挂车</option></select></label>
                   <label>产品类别<select name="kind"><option value="">全部</option><option value="drum">鼓式刹车片</option><option value="disc">盘式刹车片</option><option value="shoe">蹄铁总成</option><option value="clutch">离合器面片</option><option value="wind">风电刹车片</option></select></label>
                   <label>目录口径尺寸 <small>以表格为准</small><input name="dimensions" placeholder="例：177×197×15.5/18.5"></label>
@@ -136,10 +137,15 @@
             <button class="primary">导入询盘</button></form></details>
       </section>
       <section id="view-knowledge" class="view" hidden>
-        <div class="headline"><div><h1>企业知识库</h1><p>把目录、交叉编码、现场经验、适配验证、测试报告和价表关联到同一产品型号。</p></div></div>
+        <div class="headline"><div><h1>企业知识库</h1><p>把目录、交叉编码、现场经验、适配验证、测试报告和价表关联到同一产品型号。</p></div>
+          <button id="upload-original" class="primary" type="button" aria-describedby="original-formats">导入文件</button>
+          <input id="original-file" type="file" accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png" hidden>
+        </div>
         <div class="grid two">
-          <section class="panel padded"><h2>目录与企业资料</h2><div id="source-list"></div><p id="knowledge-stats"></p></section>
-          <section class="panel padded"><h2>导入已整理资料</h2><p>下载对应字段模板。报告可先导入索引，附报告编号、材料代码和复核结论。</p>
+          <section class="panel padded"><h2>目录与企业资料</h2>
+            <p id="original-formats" class="mini">可上传 PDF、Word（.docx）、Excel（.xlsx）或 JPG、PNG 图片，每份最多 100 MB。文件保存在本机；需要参与选型和核价的数据请按 CSV 模板导入。</p>
+            <p id="upload-status" role="status" hidden></p><div id="source-list"></div><p id="knowledge-stats"></p></section>
+          <section class="panel padded"><h2>导入结构化数据（CSV）</h2><p>下载对应字段模板。报告可先导入索引，附报告编号、材料代码和复核结论。</p>
             <form id="import" class="fields"><label>资料类型<select name="kind">
               <option value="products">产品目录</option><option value="references">车型 / 车桥 / 参考码</option><option value="fit">适配复核</option><option value="reports">测试报告</option><option value="prices">进销存价表</option><option value="cases">销售经验</option>
             </select></label><label>CSV 文件<input name="file" type="file" accept=".csv,text/csv" required></label><a id="template" class="quiet" href="/examples/products.csv">下载导入模板</a><button class="primary">导入知识库</button></form>
