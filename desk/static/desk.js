@@ -191,8 +191,10 @@ async function refreshInfo() {
 }
 
 const accountPlatform = $("#add-account [name=platform]");
+const supportsCommentSearch = platform => ["xhs","douyin"].includes(platform);
 function updateAccountHelp() {
   $("#ig-setup").hidden = accountPlatform.value !== "instagram";
+  $("#social-setup").hidden = !supportsCommentSearch(accountPlatform.value);
 }
 accountPlatform.addEventListener("change", updateAccountHelp);
 
@@ -206,7 +208,7 @@ async function refreshAccounts() {
   $("#manual [name=account]").innerHTML = options(Object.fromEntries(accounts.map(a=>[a.id,a.label])));
   $("#import-inbox [name=account]").innerHTML = $("#manual [name=account]").innerHTML;
   const socialAccount = $("#industry-search [name=account]");
-  socialAccount.innerHTML = options(Object.fromEntries(accounts.filter(a=>["xhs","douyin"].includes(a.platform))
+  socialAccount.innerHTML = options(Object.fromEntries(accounts.filter(a=>supportsCommentSearch(a.platform))
     .map(a=>[a.id,info.platforms[a.platform]+" · "+a.label])),socialAccount.value);
   accountPlatform.innerHTML = options(info.platforms, accountPlatform.value);
   updateAccountHelp();
@@ -214,8 +216,11 @@ async function refreshAccounts() {
     const matching = accounts.filter(a => a.platform === id);
     const state = {xhs:"行业评论 / 私信导入",douyin:"行业评论",x:"授权私信读取",tiktok:"事件转接 / 手工",
       youtube:"授权视频评论读取",instagram:"签名 Webhook",made_in_china:"人工登记 / 授权 CSV 导入"}[id];
-    return `<div class="channel-row"><div><strong>${escape(name)}</strong><p>
-      ${matching.map(a=>escape(a.label)).join("、") || "待添加账号"}</p></div>${tag(state,"cool")}</div>`;
+    const entries = supportsCommentSearch(id) ? matching.map(a =>
+      `<p class="actions"><span>${escape(a.label)}</span><button type="button" class="quiet" data-search-account="${escape(a.id)}">搜索评论</button></p>`).join("") :
+      `<p>${matching.map(a=>escape(a.label)).join("、")}</p>`;
+    return `<div class="channel-row"><div><strong>${escape(name)}</strong>
+      ${matching.length ? entries : "<p>待添加账号</p>"}</div>${tag(state,"cool")}</div>`;
   }).join("");
 }
 
@@ -420,6 +425,17 @@ document.addEventListener("click", event => {
   const button = event.target.closest("button");
   if (!button) return;
   if (button.dataset.view) openView(button.dataset.view);
+  if (button.dataset.searchAccount) run(async () => {
+    const account = button.dataset.searchAccount;
+    if (!accounts.some(a=>a.id === account)) await refreshAccounts();
+    openView("inbox");
+    industryForm.elements.account.value = account;
+    industryOffset = 0;
+    $("#industry-comments").open = true;
+    industryForm.elements.keyword.focus();
+    $("#industry-comments").scrollIntoView({block:"start"});
+    await refreshIndustry();
+  });
   if (button.dataset.example) run(() => useExample(button.dataset.example));
   if (button.dataset.answerField) {
     $("#search-fields").open = true;
@@ -561,10 +577,15 @@ respond($("#import-inbox"), async data => {
 respond($("#add-account"), async data => {
   const result = await api("/api/accounts","POST",data);
   let next = "可在「询盘收件箱」选择此账号，手动登记或导入询盘。";
+  let action = "";
+  if (supportsCommentSearch(data.platform)) {
+    next = "现在可以用这个账号搜索行业评论。";
+    action = `<button class="primary" type="button" data-search-account="${escape(result.id)}">用此账号搜索评论</button>`;
+  }
   if (data.platform === "instagram" && data.external_id.trim()) {
     next = "完成 Meta 授权和回调订阅后，用另一个测试账号发一条文字私信，再到「询盘收件箱」按此账号查看带“实接”标记的消息。";
   }
-  $("#new-account").innerHTML = `<p role="status">已在本工作台登记「${escape(data.label)}」。${next}</p>
+  $("#new-account").innerHTML = `<p role="status">已在本工作台登记「${escape(data.label)}」。${next}</p>${action}
     <details><summary>上游转接凭据（仅此次可查看）</summary>
     <pre>POST /ingest/${escape(result.id)}\nAuthorization: Bearer ${escape(result.secret)}</pre></details>`;
   $("#add-account").reset();

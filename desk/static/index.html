@@ -102,7 +102,7 @@
           <div class="pagination"><button class="quiet" id="prev-inbox" hidden>上一页</button><button class="quiet" id="next-inbox" hidden>下一页</button></div>
         </div>
         <details class="panel fold" id="industry-comments"><summary>小红书与抖音行业评论</summary>
-          <p>用本机浏览器搜索作品并读取可见文字评论。核对来源后，可将值得跟进的评论加入收件箱。</p>
+          <p>输入关键词后点「开始搜索」，工作台会在本机打开平台网页。首次使用时，请按网页提示登录。</p>
           <form id="industry-search" class="fields">
             <label>浏览账号<select name="account" required></select></label>
             <label>行业关键词<input name="keyword" required maxlength="100" placeholder="例如 商用车刹车片"></label>
@@ -196,6 +196,7 @@
           <section class="panel padded"><h2>添加账号</h2>
             <form id="add-account" class="fields"><label>平台<select name="platform" required></select></label><label>账号显示名<input name="label" required maxlength="80" placeholder="例如冠英海外主账号"></label>
               <label class="wide">平台账号 ID <small>手工登记询盘时可留空</small><input name="external_id" maxlength="128" aria-describedby="ig-setup"></label>
+              <p id="social-setup" class="wide" hidden>搜索行业评论时可留空平台账号 ID。添加后可选择关键词，开始搜索时会打开平台网页。</p>
               <div id="ig-setup" class="wide" hidden>
                 <p>试接 Instagram 时填写专业账号的数字 ID。请在 <a href="https://developers.facebook.com/apps/" target="_blank" rel="noopener">Meta 应用后台</a>授权该账号，配置公网 HTTPS 回调 <code>/webhooks/instagram</code>，并为账号订阅 messages 和 comments。</p>
               </div>
