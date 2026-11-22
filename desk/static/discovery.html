@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><link rel="icon" href="data:,"><meta name="viewport" content="width=device-width, initial-scale=1"><title>海外买家发现 · 冠英外贸工作台</title><link rel="stylesheet" href="/assets/style.css"><link rel="stylesheet" href="/assets/discovery.css"><script src="/assets/discovery.js" defer></script></head>
+<body><main>
+<header class="topbar"><a href="/">← 冠英外贸工作台</a><span>海外客户开发</span></header>
+<div class="content"><div class="headline"><div><h1>海外买家发现</h1><p>按市场与品类筛选企业，核对原文后记录直联判断。</p></div></div>
+<form class="panel search-panel" id="search"><div class="fields search-fields"><label>目标市场<input required maxlength="100" name="country" value="印度尼西亚"></label><label>产品<select name="product"><option value="drum">商用车鼓式刹车片</option><option value="disc">商用车盘式刹车片</option></select></label><label>企业角色<select name="role"><option value="">全部角色</option><option value="fleet">车队</option><option value="workshop">维修企业</option><option value="trade">经销商或进口商</option></select></label><label>公司或关键词<input name="query" maxlength="200" placeholder="可选"></label></div><div class="actions"><button class="primary" type="submit">检索本地资料</button><a id="web" class="secondary" target="_blank" rel="noopener" hidden>去公开网络查找更多企业 ↗</a><button class="quiet" type="button" id="open-capture">录入新企业证据</button></div><p id="search-log" class="mini"></p></form>
+<details class="panel fold" id="live-wrap"><summary>实时查询 Hino 印尼官方网点</summary>
+<p>从官方名录按城市或网点名称检索。网点记录可作为渠道线索，采购主体需进一步核实。</p>
+<form id="live" class="filters actions"><label>城市或网点 <input name="city" value="Jakarta" required maxlength="80"></label><button class="secondary">查询官方名录</button></form><p id="live-status" role="status"></p><div id="live-results"></div><button id="live-next" class="quiet" type="button" hidden>下一页</button></details>
+<details id="capture-wrap" class="panel fold"><summary>从公开网页登记企业</summary><form id="capture" class="fields">
+<label>企业名<input name="company" required maxlength="200"></label><label>国家或地区<input name="country" required maxlength="100" value="印度尼西亚"></label><label>企业官网<input name="website" type="url" placeholder="https://"></label><label>业务角色<input name="role" maxlength="120" list="roles"><datalist id="roles"><option>商用车维修企业</option><option>重卡车队</option><option>经销商</option><option>身份待核实</option></datalist></label>
+<label>涉及产品或服务<input name="products" maxlength="250" required placeholder="如重卡维修或鼓式刹车片"></label><label>证据核查日期<input name="checked_at" type="date" required></label><label class="wide">证据原文<textarea name="evidence" required maxlength="3000"></textarea></label><label>证据页面<input name="source_url" type="url" required placeholder="https://"></label><label>业务联系入口<input name="contact_url" type="url" placeholder="https://"></label><label class="wide">首次联系拟核实什么<input name="next_action" maxlength="500"></label><button class="primary">保存证据</button></form></details>
+<details class="panel fold"><summary>导入授权名录或与现有客户查重</summary><form id="import" class="fields"><label>资料类型<select name="kind"><option value="directory">授权企业名录</option><option value="crm">孚盟等已知客户清单</option></select></label><label>UTF-8 CSV 文件<input required name="file" type="file" accept=".csv"></label><button class="secondary">导入并匹配</button><a id="template" href="/examples/discovery.csv" download>下载空白模板</a></form></details>
+<p id="status" role="status" aria-live="polite"></p>
+<div class="result-heading"><h2 id="count">候选企业</h2><button id="export" type="button" class="quiet">导出本次复核表</button></div>
+<p id="review-count" class="mini"></p>
+<p class="mini">排序依据为产品线索与联系入口。车队和维修业务可提示潜在需求，实际采购资格须由销售核实。已知客户排在末尾。</p>
+<div id="cards"></div></div></main></body></html>

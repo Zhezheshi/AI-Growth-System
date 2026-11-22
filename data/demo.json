@@ -1,0 +1,18 @@
+{
+  "products": [
+    {"code":"DEMO-D01","name":"演示鼓式刹车片","kind":"drum","dimensions":"200×180×16","holes":8,"position":"rear","source":"虚构演示资料","refs":[["axle","DEMO-AXLE","演示车桥"]]}
+  ],
+  "fit": [
+    {"product":"DEMO-D01","source":"演示工艺台账","record_id":"FIT-DEMO-01","axle":"DEMO-AXLE","position":"rear","material":"DEMO-M1","evidence":"虚构样件与图纸复核记录","verified":1}
+  ],
+  "reports": [
+    {"product":"DEMO-D01","source":"演示试验报告","record_id":"TEST-DEMO-01","material":"DEMO-M1","result":"pass","evidence":"虚构的台架试验结论","verified":1}
+  ],
+  "prices": [
+    {"product":"DEMO-D01","source":"演示价表","record_id":"RATE-DEMO-01","material":"DEMO-M1","market":"Indonesia","currency":"USD","incoterm":"FOB","min_qty":100,"unit_price":"18.20","valid_from":"2025-01-01","valid_to":"2099-12-31","verified":1},
+    {"product":"DEMO-D01","source":"演示价表","record_id":"RATE-DEMO-02","material":"DEMO-M1","market":"Indonesia","currency":"USD","incoterm":"FOB","min_qty":200,"unit_price":"16.80","valid_from":"2025-01-01","valid_to":"2099-12-31","verified":1}
+  ],
+  "cases": [
+    {"product":"DEMO-D01","source":"演示售后台账","record_id":"CASE-DEMO-01","evidence":"虚构的维修站老样复核记录","verified":1}
+  ]
+}

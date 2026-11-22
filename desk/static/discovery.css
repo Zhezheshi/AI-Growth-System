@@ -1,0 +1,13 @@
+body{display:block}
+.content{max-width:1130px}
+.search-fields{grid-template-columns:repeat(4,minmax(0,1fr))}
+.actions{margin:13px 0}
+#status{color:var(--accent);margin-top:12px}
+#cards article{margin:14px 0}
+#cards blockquote{margin:8px 0;padding:5px 14px;border-left:3px solid #9cc3ce;white-space:pre-wrap;overflow-wrap:anywhere}
+#cards .review{display:grid;grid-template-columns:minmax(110px,.8fr) minmax(150px,3fr) auto;gap:10px;margin-top:12px;align-items:end}
+#cards .review label{display:grid;gap:5px}
+#cards .proof{margin-top:12px}
+#cards .source-links{display:flex;gap:15px;flex-wrap:wrap}
+#cards .ai-output{white-space:pre-wrap}
+@media(max-width:750px){.search-fields{grid-template-columns:1fr 1fr}#cards .review{grid-template-columns:1fr}#cards .row-head{flex-wrap:wrap}}

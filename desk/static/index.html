@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><link rel="icon" href="data:,"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>冠英外贸工作台</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <script type="module" src="/assets/desk.js"></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">K</span><div><strong>冠英外贸</strong><small>Kooying Sales Desk</small></div></div>
+    <nav aria-label="工作台">
+      <a class="discovery-link" href="/static/discovery.html"><span aria-hidden="true">◎</span>海外买家发现</a>
+      <button data-view="fit" aria-current="page"><span aria-hidden="true">⌕</span>型号与报价</button>
+      <button data-view="inbox"><span aria-hidden="true">▤</span>询盘收件箱 <em id="nav-count"></em></button>
+      <button data-view="fair"><span aria-hidden="true">◫</span>上海汽配展</button>
+      <button data-view="knowledge"><span aria-hidden="true">▥</span>企业知识库</button>
+      <button data-view="accounts"><span aria-hidden="true">◎</span>渠道与账号</button>
+    </nav>
+    <div class="sidebar-footer"><span class="dot"></span> 销售工作台 <small id="model-status">本地检索</small></div>
+  </aside>
+  <main>
+    <header class="topbar"><span>浙江冠英汽车零部件有限公司</span><button class="quiet top-inbox" data-view="inbox"><span class="dot"></span> <span id="top-alert">询盘提醒</span></button></header>
+    <div class="content">
+      <section id="view-fit" class="view">
+        <div class="headline"><div><h1>查型号，准备报价</h1><p>输入客户原话、车型、当前车桥或旧片编码，现场核对目录与适配依据。</p></div><span class="tag cool" id="catalog-count">目录索引</span></div>
+        <div class="grid fit-layout">
+          <div>
+            <form id="search" class="panel search-panel">
+              <label class="query-heading" for="query">客户问了什么？</label>
+              <div class="searchbox"><input id="query" name="query" maxlength="1600" placeholder="例：旧片写着 WVA 19032，能查到吗？"><button class="primary">查询型号</button></div>
+              <div class="samples" aria-label="示例">
+                <button type="button" class="pill" data-example="wva">WVA 19032</button><button type="button" class="pill" data-example="fmsi">FMSI 4707</button><button type="button" class="pill" data-example="jh6">JH6 同码双候选</button><button type="button" class="pill" data-example="axle">联合 440 桥</button><button type="button" class="pill" id="quote-example" data-example="quote" hidden>报价演示</button>
+                <button type="button" class="pill" id="model-extract" hidden>AI 提取字段</button>
+              </div>
+              <details id="search-fields"><summary>补充车桥、尺寸和报价条件</summary>
+                <div class="fields">
+                  <label>车型<input name="vehicle" placeholder="例：JH6"></label>
+                  <label>当前车桥<input name="axle" placeholder="例：联合440桥"></label>
+                  <label>现有编码<input name="code" placeholder="例：19032"></label>
+                  <label>编码体系<input name="namespace" placeholder="例：WVA / BFMC"></label>
+                  <label>安装位置<select name="position"><option value="">请选择</option><option value="front">前</option><option value="rear">后</option><option value="trailer">挂车</option></select></label>
+                  <label>产品类别<select name="kind"><option value="">全部</option><option value="drum">鼓式刹车片</option><option value="disc">盘式刹车片</option><option value="shoe">蹄铁总成</option><option value="clutch">离合器面片</option><option value="wind">风电刹车片</option></select></label>
+                  <label>目录口径尺寸 <small>以表格为准</small><input name="dimensions" placeholder="例：177×197×15.5/18.5"></label>
+                  <label>孔数<input name="holes" type="number" min="0" max="100" step="1"></label>
+                  <label>材料代码<input name="material" placeholder="以材料台账为准"></label>
+                  <label>数量（套）<input name="qty" type="number" min="1" step="1"></label>
+                  <label>目标市场<input name="market" placeholder="例：Indonesia"></label>
+                  <label>币种<input name="currency" maxlength="3" placeholder="USD"></label>
+                  <label>贸易条款<input name="incoterm" placeholder="FOB"></label>
+                </div>
+              </details>
+            </form>
+            <div id="results" aria-live="polite"></div>
+            <details id="custom-quote" class="panel fold">
+              <summary>按订单条件核算成本</summary>
+              <p class="mini">填入工程与财务提供的重量、配方单价、附件成本和贸易费用，生成供业务复核的内部草稿。</p>
+              <form id="custom-quote-form" class="fields">
+                <label>目录型号<input name="product" required maxlength="180"></label>
+                <label>当前车桥<input name="axle" maxlength="180"></label>
+                <label>安装位置<select name="position"><option value="">待核实</option><option value="front">前</option><option value="rear">后</option><option value="trailer">挂车</option></select></label>
+                <label>配方 / 材料代码<input name="material" required maxlength="80"></label>
+                <label>订制厚度（mm）<input name="thickness" required maxlength="100" placeholder="例：17.5/10.5"></label>
+                <label>目标市场<input name="market" required maxlength="80"></label>
+                <label>客户要求的标准<input name="standard" required maxlength="120" placeholder="例：客户技术规格书编号"></label>
+                <label>数量（套）<input name="qty" type="number" min="1" max="100000000" required></label>
+                <label>币种<input name="currency" required maxlength="3" pattern="[A-Za-z]{3}" placeholder="USD"></label>
+                <label>贸易条款<select name="incoterm"><option value="FOB">FOB</option><option value="CIF">CIF</option><option value="DDP">DDP</option><option value="FCA">FCA</option><option value="CFR">CFR</option><option value="DAP">DAP</option><option value="EXW">EXW</option></select></label>
+                <label class="wide">指定港口 / 地点<input name="delivery_point" required maxlength="160"></label>
+                <label>单套净重（kg）<input name="kg_per_set" type="number" min="0.0001" step="0.0001" required></label>
+                <label>配方材料成本 / kg<input name="material_cost_per_kg" type="number" min="0.0001" step="0.0001" required></label>
+                <label>单套其他成本<input name="other_cost_per_set" type="number" min="0" step="0.0001" required placeholder="无则填 0"></label>
+                <label>整单贸易费用<input name="trade_cost_total" type="number" min="0" step="0.0001" required placeholder="无则填 0"></label>
+                <label>拟议单价 / 套 <small>可留空</small><input name="proposed_per_set" type="number" min="0.0001" step="0.0001"></label>
+                <label>附件<select name="includes_attachments" required><option value="" disabled selected>请选择</option><option value="no">不含附件</option><option value="yes">含附件</option></select></label>
+                <div id="attachment-section" class="wide" hidden>
+                  <div id="attachment-lines"></div><button id="add-attachment" type="button" class="secondary">加一项附件</button>
+                </div>
+                <label class="wide">成本依据<input name="source" required maxlength="300" placeholder="工艺单、材料台账、附件供应价或物流报价单编号"></label>
+                <button class="primary">计算内部成本</button>
+              </form>
+              <div id="custom-quote-result" aria-live="polite"></div>
+            </details>
+          </div>
+          <div class="rail">
+            <section class="panel rail-panel"><h2>待跟进询盘</h2><div class="rail-stats"><div><strong id="rail-pending">—</strong><span>全部待跟进</span></div><div><strong id="rail-dm">—</strong><span>待处理私信</span></div></div><p id="rail-lead">询盘同步后显示在这里。</p><button class="secondary" data-view="inbox">打开收件箱</button></section>
+            <section class="panel rail-panel show-panel"><span class="tag">12 月 2–5 日</span><h2>上海法兰克福汽配展</h2><p>国家会展中心（上海）<br>冠英展位 <strong>1.1N59</strong></p><button class="quiet" data-view="fair">查看展会邀约</button></section>
+          </div>
+        </div>
+      </section>
+      <section id="view-inbox" class="view" hidden>
+        <div class="headline"><div><h1>询盘收件箱</h1><p>按平台和账号归集评论、私信，确认客户身份后分配跟进。</p></div><button class="secondary" id="sync">同步已配置来源</button></div>
+        <div class="inbox-stats panel" id="inbox-stats"></div>
+        <div class="panel">
+          <div class="panel-heading"><h2>询盘队列</h2><div class="filters">
+            <select id="filter-platform" aria-label="平台"></select><select id="filter-account" aria-label="账号"></select>
+            <select id="filter-role" aria-label="买家身份"><option value="">全部身份</option><option value="end_user">终端采购</option><option value="trade">贸易渠道</option><option value="unknown">待核实</option></select>
+            <select id="filter-status" aria-label="处理状态"><option value="">全部状态</option><option value="new">待跟进</option><option value="following">跟进中</option><option value="done">已完成</option></select>
+            <select id="filter-queue" aria-label="交接筛选"><option value="">全部交接事项</option><option value="unassigned">待认领</option><option value="unanswered">待回复</option><option value="overdue">待回复满 8 小时</option></select>
+          </div></div>
+          <div id="inquiries"></div>
+          <div class="pagination"><button class="quiet" id="prev-inbox" hidden>上一页</button><button class="quiet" id="next-inbox" hidden>下一页</button></div>
+        </div>
+        <details class="panel fold"><summary>手动登记一条评论或私信</summary><form id="manual" class="fields">
+          <label>平台账号<select name="account" required></select></label><label>消息类型<select name="kind"><option value="dm">私信</option><option value="comment">评论</option></select></label>
+          <label>对方显示名称<input name="sender" maxlength="160"></label><label>原文链接<input name="url" type="url" placeholder="https://"></label>
+          <label>消息编号<input name="event_id" maxlength="250" placeholder="可填写平台原编号以查重"></label>
+          <label>原始收件时间（设备本地时间）<input name="occurred_at" type="datetime-local" step="1"></label>
+          <label class="wide">询盘原文<textarea name="body" required maxlength="10000"></textarea></label><button class="primary">登记询盘</button>
+        </form></details>
+        <details class="panel fold"><summary>导入账号的询盘 CSV</summary>
+          <p>必填列 event_id、kind、body、occurred_at。kind 填 dm 或 comment，时间附时区，例如 2026-11-20T20:30:00+08:00。可选 sender、url。按账号和消息编号去重。</p>
+          <form id="import-inbox" class="fields"><label>平台账号<select name="account" required></select></label>
+            <label>UTF-8 CSV<input type="file" name="file" accept=".csv,text/csv" required></label>
+            <button class="primary">导入询盘</button></form></details>
+      </section>
+      <section id="view-fair" class="view" hidden>
+        <div class="headline"><div><h1>上海汽配展邀约</h1><p>在展前确认面谈，展中采集常用联系方式，展后推进样品与工厂参观。</p></div><a class="secondary" href="https://automechanika-shanghai.hk.messefrankfurt.com/shanghai/en/planning-preparation/visitors.html" target="_blank" rel="noopener">展会官方信息</a></div>
+        <div class="fair-banner panel"><div><span>Automechanika Shanghai</span><h2>1.1N59</h2><p>2026 年 12 月 2–5 日 · 国家会展中心（上海）</p></div><div><strong>展位面谈 / 湖州工厂参观</strong><p>展期提供预约接送。参观时间、集合地点与交通方式由销售和客户确认。</p></div></div>
+        <div class="grid two">
+          <section class="panel padded">
+            <h2>买家名录</h2>
+            <p id="fair-file-note">上传买家 CSV 以在本机查看筛选与邀约。</p>
+            <a id="fair-xlsx" href="/api/buyers/workbook" class="secondary" hidden>下载买家 Excel</a>
+            <label class="file-label">导入买家 CSV<input id="buyer-file" type="file" accept=".csv,text/csv"></label>
+            <div class="filters buyer-filters"><input id="buyer-filter" placeholder="搜索公司、国家或产品"><select id="buyer-grade" aria-label="优先级"><option value="">全部优先级</option><option>A</option><option>B</option><option>C</option></select></div>
+            <div id="buyers"></div>
+          </section>
+          <section class="panel padded">
+            <h2>生成邀请邮件</h2><p>确认公司、产品与联系方式后，可在邮件客户端打开草稿。</p>
+            <form id="invitation" class="fields">
+              <label>公司 / 联系人<input name="buyer" required maxlength="120" placeholder="Your parts sourcing team"></label>
+              <label>收件邮箱<input name="email" type="email" placeholder="buyer@example.com"></label>
+              <label>产品或对方参考码<input name="product" required maxlength="180" value="heavy-duty brake linings and pads"></label>
+              <label>沟通场景<select name="stage"><option value="pre">展前邀约</option><option value="show">展中见面确认</option><option value="after">展后跟进</option></select></label>
+              <button class="primary">生成英文草稿</button>
+            </form>
+            <div id="draft" aria-live="polite"></div>
+          </section>
+        </div>
+        <section class="panel padded timeline">
+          <h2>展期跟进安排</h2><dl>
+            <div><dt>11.25–12.01</dt><dd>按匹配度邀约买家。优先从主办方 Match Up 约历史买家，请对方确认当前行程与方便时段。</dd></div>
+            <div><dt>12.02–12.05</dt><dd>展位登记品类、参考码、用量和采购周期。由买家自报常用邮箱或 WhatsApp、Telegram、Facebook，确认工厂参观兴趣及接送点。</dd></div>
+            <div><dt>12.06–12.12</dt><dd>按面谈内容发送报价所需问题、样品计划或参观确认。回访优先使用买家确认的长期联系方式。</dd></div>
+          </dl>
+          <details><summary>虹桥周边 20 km 投放简报</summary><p>拟以国家会展中心为地理范围中心，验证 Meta 后台是否支持上海定向及有效覆盖。使用英文、西语、葡语素材，引导主动预约展位或参观工厂。若后台覆盖不足，使用主办方配对、预约链接和现场二维码收集主动留资。投放指标以有效询盘、到展位和参观预约为准。</p><button class="quiet" id="copy-ad">复制英文投放文案</button></details>
+        </section>
+        <details class="panel fold"><summary>登记买家名片与长期联系方式</summary>
+          <form id="capture-buyer" class="fields">
+            <label>企业名称<input name="company" required maxlength="170"></label><label>国家 / 地区<input name="country" required maxlength="100"></label>
+            <label>联系人 / 职务<input name="business_contact" maxlength="100"></label><label>意向产品 / 旧片型号<input name="products" required maxlength="350"></label>
+            <label>工作邮箱<input name="email" type="email" maxlength="140"></label><label>常用 WhatsApp<input name="whatsapp" placeholder="含国际区号" maxlength="140"></label>
+            <label>Facebook 主页<input type="url" name="facebook" maxlength="300"></label><label>Telegram<input name="telegram" maxlength="100"></label>
+            <label>常用 WeChat<input name="wechat" maxlength="100"></label><label>下次会面 / 参观安排<input name="next_action" maxlength="200" placeholder="买家确认的日期、地点、接送要求"></label>
+            <button class="primary">登记买家</button>
+          </form>
+        </details>
+      </section>
+      <section id="view-knowledge" class="view" hidden>
+        <div class="headline"><div><h1>企业知识库</h1><p>把目录、交叉编码、现场经验、适配验证、测试报告和价表关联到同一产品型号。</p></div></div>
+        <div class="grid two">
+          <section class="panel padded"><h2>目录与企业资料</h2><div id="source-list"></div><p id="knowledge-stats"></p></section>
+          <section class="panel padded"><h2>导入已整理资料</h2><p>下载对应字段模板。报告可先导入索引，附报告编号、材料代码和复核结论。</p>
+            <form id="import" class="fields"><label>资料类型<select name="kind">
+              <option value="products">产品目录</option><option value="references">车型 / 车桥 / 参考码</option><option value="fit">适配复核</option><option value="reports">测试报告</option><option value="prices">进销存价表</option><option value="cases">销售经验</option>
+            </select></label><label>CSV 文件<input name="file" type="file" accept=".csv,text/csv" required></label><a id="template" class="quiet" href="/examples/products.csv">下载导入模板</a><button class="primary">导入知识库</button></form>
+          </section>
+          <section class="panel padded"><h2>记录一条销售经验</h2>
+            <form id="case" class="fields"><label>目录型号<input name="product" required placeholder="GYS-007"></label><label>来源或工单名<input name="source" required placeholder="售后记录 2026-11"></label>
+              <label class="wide">现场记录<textarea name="evidence" required placeholder="写下车桥铭牌、旧片标记、样件照片编号及确认过程"></textarea></label><button class="primary">保存待复核记录</button>
+            </form>
+          </section>
+          <section class="panel padded"><h2>冠英重点产品线</h2><dl class="product-lines">
+            <div><dt>鼓式刹车片</dt><dd>WVA 19094、19488、19486、19487、19032、19581、19582</dd></div>
+            <div><dt>蹄铁 / 鼓刹参考</dt><dd>北美、南美 FMSI 4707、4515、4551、4708、4709、4711、4720</dd></div>
+            <div><dt>其他品类</dt><dd>盘式刹车片、蹄铁总成、离合器面片、风电刹车片</dd></div>
+            <div><dt>海关检索线索</dt><dd>鼓片 6813810000、盘片 8708309990、蹄铁总成 8708301000、离合器面片 6813890000（企业提供）</dd></div>
+          </dl></section>
+        </div>
+      </section>
+      <section id="view-accounts" class="view" hidden>
+        <div class="headline"><div><h1>渠道与账号</h1><p>在工作台登记账号，用于归集询盘。接收平台消息还需配置对应渠道。</p></div></div>
+        <div class="grid two"><section class="panel padded"><h2>渠道</h2><div id="channels"></div><p id="sync-status"></p></section>
+          <section class="panel padded"><h2>添加账号</h2>
+            <form id="add-account" class="fields"><label>平台<select name="platform" required></select></label><label>账号显示名<input name="label" required maxlength="80" placeholder="例如冠英海外主账号"></label>
+              <label class="wide">平台账号 ID <small>手工登记询盘时可留空</small><input name="external_id" maxlength="128" aria-describedby="ig-setup"></label>
+              <div id="ig-setup" class="wide" hidden>
+                <p>试接 Instagram 时填写专业账号的数字 ID。请在 <a href="https://developers.facebook.com/apps/" target="_blank" rel="noopener">Meta 应用后台</a>授权该账号，配置公网 HTTPS 回调 <code>/webhooks/instagram</code>，并为账号订阅 messages 和 comments。</p>
+              </div>
+              <button class="primary">添加账号</button>
+            </form><div id="new-account"></div>
+          </section></div>
+      </section>
+    </div>
+  </main>
+  <div id="notice" role="status" hidden></div>
+</body>
+</html>

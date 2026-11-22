@@ -1,0 +1,5 @@
+event_id,kind,sender,body,occurred_at,url
+sample-100,dm,演示维修厂,"Can you quote 200 sets for WVA 19032?",2026-11-20T23:10:00+07:00,
+sample-101,comment,演示访客,Thank you for the update.,2026-11-20T23:15:00+07:00,
+sample-102,dm,演示维修厂,We checked the rear lining. It has 16 holes.,2026-11-20T23:20:00+07:00,
+sample-100,dm,演示维修厂,"Can you quote 200 sets for WVA 19032?",2026-11-20T23:10:00+07:00,

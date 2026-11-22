@@ -1,0 +1,202 @@
+[
+  {
+    "company": "CV. Jaya Raya Utama",
+    "country": "印度尼西亚",
+    "role": "刹车衬片维修门店",
+    "products": "商用车刹车衬片翻修及安装",
+    "source_url": "https://www.kampasrem.com/",
+    "contact_url": "https://kampasrem.com/contact",
+    "evidence": "Pemasangan kembali kampas rem & kampas kopling dry & wet",
+    "summary": "印尼直联第二批 · 泗水门店公开列有客车、卡车业务，并承接刹车衬片重新安装。可从该店常换的旧片尺寸和铆孔规格切入。 联系方式：门店公开邮箱 jaya_raya_utama@yahoo.co.id。",
+    "website": "https://www.kampasrem.com",
+    "next_action": "哪些客车或卡车衬片更换最频繁？方便提供一款旧片的尺寸、孔位和月用量吗？",
+    "checked_at": "2026-11-21",
+    "cli_check": {
+      "supported": true,
+      "evidence": "Pemasangan kembali kampas rem & kampas kopling dry & wet",
+      "role": "workshop",
+      "summary": "摘录描述了重新安装刹车片和离合器摩擦片的维修作业。",
+      "question": "贵公司维修卡车时是否需要采购刹车片？如有需要，通常适配哪些车型？"
+    }
+  },
+  {
+    "company": "PT Batuta Corporation",
+    "country": "印度尼西亚",
+    "role": "卡车车队",
+    "products": "Hino 牵引车与挂车车队",
+    "source_url": "https://batuta.id/id/why-choose-us/",
+    "contact_url": "https://batuta.id/id/why-choose-us/",
+    "evidence": "Batuta mengoperasikan 46 unit truk Hino 500 Series Ranger FM265TH",
+    "summary": "印尼直联第二批 · 集团披露运营 46 辆 Hino 500 FM265TH，并单列车间电话。可直接从一辆在役车辆核对车桥与旧片。 联系方式：雅加达北区 Workshop & Truck Pool 电话 +62 21 440 5154。",
+    "website": "https://batuta.id",
+    "next_action": "你们在役 FM265TH 目前装哪种车桥？能请车间提供一款旧片编码或照片吗？",
+    "checked_at": "2026-11-21",
+    "cli_check": {
+      "supported": true,
+      "evidence": "Batuta mengoperasikan 46 unit truk Hino 500 Series Ranger FM265TH",
+      "role": "fleet",
+      "summary": "Batuta 运营 Hino 500 Series Ranger FM265TH 卡车车队。",
+      "question": "贵公司目前是否有为这款卡车采购制动配件的需求？如有，需要哪些配件？"
+    }
+  },
+  {
+    "company": "Perum DAMRI",
+    "country": "印度尼西亚",
+    "role": "客车车队",
+    "products": "客车运营及车辆备件采购",
+    "source_url": "https://eproc.damri.co.id/public/tender",
+    "contact_url": "https://eproc.damri.co.id/login",
+    "evidence": "PENGADAAN SUKU CADANG KENDARAAN MERK MERCEDES BENZ MELALUI PROGRAM ON SITE PART STOCK\nSEWA ARMADA UNTUK KEGIATAN ANGKUTAN MUDIK TAHUN 2023",
+    "summary": "印尼直联第二批 · 客车运营商。2026 年 2 月采购清单有奔驰车辆备件项目，采购平台开放供应商登记，适合先问制动件类目与准入条件。 联系方式：供应商注册入口；采购事务邮箱 pengadaan@damri.co.id。",
+    "website": "https://damri.co.id",
+    "next_action": "商用车制动件供应商如何登记？海外制造商可以直接申请，还是需要印尼本地合作方？",
+    "checked_at": "2026-11-21",
+    "cli_check": {
+      "supported": true,
+      "evidence": "SEWA ARMADA UNTUK KEGIATAN ANGKUTAN MUDIK TAHUN 2023",
+      "role": "fleet",
+      "summary": "公开摘录提到为2023年返乡运输活动租用车队。",
+      "question": "请问贵司目前有卡车制动配件的采购需求吗？如有，涉及哪些车型和配件？"
+    }
+  },
+  {
+    "company": "PT Alamui Logistics",
+    "country": "印度尼西亚",
+    "role": "物流车队与内部维修",
+    "products": "车队制动检查及备件申报",
+    "source_url": "https://www.alamui.co.id/career/",
+    "contact_url": "https://www.alamui.co.id/contact-us/",
+    "evidence": "Memeriksa kondisi mesin, oli, radiator, rem, ban, aki, lampu, dan sistem kelistrikan kendaraan.\nMengusulkan kebutuhan suku cadang dan peralatan kepada Kepala Mekanik.",
+    "summary": "印尼直联第二批 · Cakung 机修岗位明确负责车辆制动检查，并向机修主管提报备件需求。销售可请集团商务人员转接该主管。 联系方式：集团商务邮箱 info@the-alamui.com。",
+    "website": "https://www.alamui.co.id",
+    "next_action": "能否转接 Cakung 机修主管？你们如何汇总常换制动片的规格并交给采购？",
+    "checked_at": "2026-11-21",
+    "cli_check": {
+      "supported": true,
+      "evidence": "Memeriksa kondisi mesin, oli, radiator, rem, ban, aki, lampu, dan sistem kelistrikan kendaraan.\nMengusulkan kebutuhan suku cadang dan peralatan kepada Kepala Mekanik.",
+      "role": "workshop",
+      "summary": "摘录描述了检查车辆制动等系统，并向首席机械师提出备件和工具需求的维修职责。",
+      "question": "请问贵司近期是否有卡车制动配件的采购需求？如有，涉及哪些车型和配件？"
+    }
+  },
+  {
+    "company": "PT Grahaprima Suksesmandiri Tbk（Graha Trans）",
+    "country": "印度尼西亚",
+    "role": "卡车车队与维修车间",
+    "products": "卡车车间运营",
+    "source_url": "https://grahatrans.com/unmatched-service-and-support/",
+    "contact_url": "https://grahatrans.com/contact-us/",
+    "evidence": "Our fully equipped workshop operates around the clock, with a team of experienced mechanics ready to respond to any maintenance or repair needs.",
+    "summary": "印尼直联第二批 · 车队设全天运行的维修车间，Deltamas 车场有独立电话，可绕过总部总机找到实际维护车辆的人。 联系方式：Deltamas 车场电话 +62 21 82602676。",
+    "website": "https://grahatrans.com",
+    "next_action": "Deltamas 车场的制动件由车间选型还是总部统一指定？可以先对一款常用旧片吗？",
+    "checked_at": "2026-11-21",
+    "cli_check": {
+      "supported": true,
+      "evidence": "Our fully equipped workshop operates around the clock, with a team of experienced mechanics ready to respond to any maintenance or repair needs.",
+      "role": "workshop",
+      "summary": "该公司设有全天运营的维修车间，由经验丰富的技师提供保养和维修服务。",
+      "question": "贵公司的维修车间目前是否有采购卡车制动零部件的需求？"
+    }
+  },
+  {
+    "company": "PT Bakti Transindo",
+    "country": "印度尼西亚",
+    "role": "挂车车队与维修车间",
+    "products": "挂车运输与内部机修",
+    "source_url": "https://baktitransindo.com/",
+    "contact_url": "https://baktitransindo.com/",
+    "evidence": "Perusahaan kami juga dilengkapi workshop dengan kru mekanik internal dan mekanik rekanan",
+    "summary": "印尼直联第二批 · 公司经营挂车运输，车间同时配备内部和合作机修人员。可核实哪些车型由内部车间换片，哪些交给外协。 联系方式：官网指定的非运价咨询邮箱 admin@baktitransindo.com。",
+    "website": "https://baktitransindo.com",
+    "next_action": "挂车制动件是车队统一采购，还是由合作维修厂供货？",
+    "checked_at": "2026-11-21",
+    "cli_check": {
+      "supported": true,
+      "evidence": "dilengkapi workshop dengan kru mekanik internal dan mekanik rekanan",
+      "role": "workshop",
+      "summary": "公司设有维修车间，由内部和合作方的维修技师提供支持。",
+      "question": "贵公司的维修车间是否有卡车制动零部件的采购需求？如有，主要需要哪些零部件？"
+    }
+  },
+  {
+    "company": "PT Jaya Sentosa Transport",
+    "country": "印度尼西亚",
+    "role": "卡车车队与维修车间",
+    "products": "翼厢车及自有车辆维修",
+    "source_url": "https://www.jayasentosatransport.co.id/workshop/",
+    "contact_url": "https://jayasentosatransport.co.id/kontak-kami/",
+    "evidence": "bengkel untuk perbaikan armada kami",
+    "summary": "印尼直联第二批 · 车队介绍列出多种货车，并明确车间用于维修自己的车辆。可由雅加达办公室转接车间，从翼厢货车的一款常换件开始。 联系方式：雅加达办公室 +62 21 690 8939；业务邮箱 sales@jayasentosatransport.co.id。",
+    "website": "https://www.jayasentosatransport.co.id",
+    "next_action": "雅加达车间由谁负责翼厢货车的制动维修？常换的车桥和旧片编码可否提供一例？",
+    "checked_at": "2026-11-21",
+    "cli_check": {
+      "supported": true,
+      "evidence": "bengkel untuk perbaikan armada kami",
+      "role": "fleet",
+      "summary": "原文提到用于维修自有车队的维修车间。",
+      "question": "贵司车队目前有卡车制动零部件的采购需求吗？如有，涉及哪些车型和零部件？"
+    }
+  },
+  {
+    "company": "PT Himalaya Andalan Transportindo",
+    "country": "印度尼西亚",
+    "role": "集装箱挂车车队",
+    "products": "挂车运输、车间及道路维修",
+    "source_url": "https://www.himalayaandalantransportindo.com/service-himalaya-andalan-transportindo/",
+    "contact_url": "https://www.himalayaandalantransportindo.com/contact-himalaya-andalan-transportindo/",
+    "evidence": "Supported by 56 trailer units ensuring reliable availability and consistent delivery performance.\nWorkshop support keeps our fleet ready and reliable at all times.",
+    "summary": "印尼直联第二批 · 服务页列出 56 辆挂车、维修车间和道路维修队。可向车队询问牵引车与挂车分别由谁备货。 联系方式：官方业务 WhatsApp +62 812 1516 7646。",
+    "website": "https://www.himalayaandalantransportindo.com",
+    "next_action": "贵司牵引车与挂车的制动件是否分开采购？哪一类最适合先用旧片尺寸核对？",
+    "checked_at": "2026-11-21",
+    "cli_check": {
+      "supported": true,
+      "evidence": "Workshop support keeps our fleet ready and reliable at all times.",
+      "role": "fleet",
+      "summary": "该公司提到，其车队依靠维修支持保持正常运营。",
+      "question": "贵公司的车队目前是否有采购卡车制动零部件的需求？"
+    }
+  },
+  {
+    "company": "PT Mallomo（Bosowa Transportation）",
+    "country": "印度尼西亚",
+    "role": "卡车车队",
+    "products": "自卸车、挂车及维修支持",
+    "source_url": "https://bosowatransportation.id/trucking",
+    "contact_url": "https://bosowatransportation.id/kontak",
+    "evidence": "Layanan trucking dikelola oleh dua perusahaan yakni PT Mallomo dan PT Lapasu Trading International",
+    "summary": "印尼直联第二批 · Bosowa 公布了卡车运营主体、车型和全天机修支持。以 PT Mallomo 为一个跟进对象，先确认其负责的车场。 联系方式：集团运输业务邮箱 info.btrans@bosowa.co.id。",
+    "website": "https://bosowatransportation.id",
+    "next_action": "能否转接 PT Mallomo 管理自卸车或挂车的车间？制动件供应商由哪一级选定？",
+    "checked_at": "2026-11-21",
+    "cli_check": {
+      "supported": true,
+      "evidence": "Layanan trucking dikelola oleh dua perusahaan yakni PT Mallomo dan PT Lapasu Trading International",
+      "role": "fleet",
+      "summary": "PT Mallomo 和 PT Lapasu Trading International 共同运营卡车运输服务。",
+      "question": "贵公司目前是否有采购卡车制动配件的需求？"
+    }
+  },
+  {
+    "company": "PT Bijanta Logistik Indonesia",
+    "country": "印度尼西亚",
+    "role": "专用运输车队",
+    "products": "自有清障车、轿运车及装载车",
+    "source_url": "https://bijanta.id/",
+    "contact_url": "https://bijanta.id/kemitraan",
+    "evidence": "Armada towing, car carrier dan self loader milik sendiri",
+    "summary": "印尼直联第二批 · 官网明确车队自有，合作页另列维修伙伴。适合先查清自有车辆更换制动件时由车队还是合作车间采购。 联系方式：合作页 WhatsApp +62 852 5550 9933。",
+    "website": "https://bijanta.id",
+    "next_action": "自有轿运车换制动片时，是贵司统一选购，还是由合作修理厂选购？",
+    "checked_at": "2026-11-21",
+    "cli_check": {
+      "supported": true,
+      "evidence": "Armada towing, car carrier dan self loader milik sendiri",
+      "role": "fleet",
+      "summary": "该公司称其自有车队包括拖车、车辆运输车和自装载车辆。",
+      "question": "贵司自有车队近期是否有采购卡车制动配件的需求？如有，涉及哪些车型和配件？"
+    }
+  }
+]
